@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(source:*)",
+      "Bash(gcloud:*)",
+      "Bash(brew:*)",
+      "Bash(/Users/paulbonneville/google-cloud-sdk/bin/gcloud config set project gen-lang-client-0690470730)",
+      "Bash(mkdir:docs-ai*)",
+      "Write(docs-ai/*)"
+    ],
+    "deny": []
+  }
+}
