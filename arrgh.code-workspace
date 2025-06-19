@@ -1,0 +1,23 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../arrgh-ios"
+		},
+		{
+			"path": "../arrgh-fastapi"
+		},
+		{
+			"path": "../arrgh-n8n"
+		},
+		{
+			"path": "../arrgh-excalidraw"
+		},
+		{
+			"path": "../arrgh-excalidraw-deploy"
+		}
+	],
+	"settings": {}
+}
