@@ -146,9 +146,17 @@ jobs:
             echo "=== ERROR: Unexpected event type ==="
             echo "EVENT_NAME variable contains: '$EVENT_NAME'"
             echo "Expected 'pull_request' or 'pull_request_review'"
-            echo "Comparison test:"
-            echo "  [ '$EVENT_NAME' = 'pull_request' ] = $([ "$EVENT_NAME" = "pull_request" ] && echo "true" || echo "false")"
-            echo "  [ '$EVENT_NAME' = 'pull_request_review' ] = $([ "$EVENT_NAME" = "pull_request_review" ] && echo "true" || echo "false")"
+            echo "Comparison test results:"
+            if [ "$EVENT_NAME" = "pull_request" ]; then
+              echo "  EVENT_NAME matches 'pull_request': true"
+            else
+              echo "  EVENT_NAME matches 'pull_request': false"
+            fi
+            if [ "$EVENT_NAME" = "pull_request_review" ]; then
+              echo "  EVENT_NAME matches 'pull_request_review': true"
+            else
+              echo "  EVENT_NAME matches 'pull_request_review': false"
+            fi
             exit 1
           fi
           
