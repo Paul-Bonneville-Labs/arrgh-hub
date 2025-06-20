@@ -256,6 +256,21 @@ jobs:
           TYPE="${{ steps.pr-type.outputs.type }}"
           PR_NUMBER="${{ github.event.pull_request.number }}"
 
+          # Function to safely add label (create if doesn't exist)
+          add_label_safe() {
+            local label="$1"
+            local color="$2"
+            local description="$3"
+            
+            # Try to add the label, create if it doesn't exist
+            if ! gh pr edit $PR_NUMBER --repo ${{ github.repository }} --add-label "$label" 2>/dev/null; then
+              echo "Label '$label' doesn't exist, creating it..."
+              gh label create "$label" --color "$color" --description "$description" --repo ${{ github.repository }} || true
+              # Try adding the label again after creation
+              gh pr edit $PR_NUMBER --repo ${{ github.repository }} --add-label "$label" || echo "Failed to apply label '$label'"
+            fi
+          }
+
           case $TYPE in
             feat)
               gh pr edit $PR_NUMBER --repo ${{ github.repository }} --add-label "enhancement"
@@ -267,22 +282,22 @@ jobs:
               gh pr edit $PR_NUMBER --repo ${{ github.repository }} --add-label "documentation"
               ;;
             test)
-              gh pr edit $PR_NUMBER --repo ${{ github.repository }} --add-label "testing"
+              add_label_safe "testing" "0e8a16" "Test-related changes and improvements"
               ;;
             refactor)
-              gh pr edit $PR_NUMBER --repo ${{ github.repository }} --add-label "refactoring"
+              add_label_safe "refactoring" "fbca04" "Code refactoring without functionality changes"
               ;;
             style)
-              gh pr edit $PR_NUMBER --repo ${{ github.repository }} --add-label "style"
+              add_label_safe "style" "f9d0c4" "Code style and formatting changes"
               ;;
             build|ci)
-              gh pr edit $PR_NUMBER --repo ${{ github.repository }} --add-label "ci-cd"
+              add_label_safe "ci-cd" "0e8a16" "CI/CD and build system changes"
               ;;
             perf)
-              gh pr edit $PR_NUMBER --repo ${{ github.repository }} --add-label "performance"
+              add_label_safe "performance" "d4c5f9" "Performance improvements"
               ;;
             chore)
-              gh pr edit $PR_NUMBER --repo ${{ github.repository }} --add-label "chore"
+              add_label_safe "chore" "fef2c0" "Maintenance and chore tasks"
               ;;
             *)
               echo "Unknown or no type found: $TYPE"
