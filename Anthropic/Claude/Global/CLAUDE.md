@@ -45,6 +45,7 @@
   - Keep related changes together on the same branch
   - Create focused, cohesive commits
   - When work is complete, create PR for review/merge
+  - When user says "ship it", commit the code to the appropriate branch and create a PR
 
   ## NEVER BYPASS THIS PROTOCOL - Always check branch status first!
 
@@ -164,3 +165,12 @@ gh auth status && gh project list --owner pbonneville
 # Test project access
 gh project view 1 --owner pbonneville
 ```
+
+# Command Shortcuts and Special Instructions
+
+## Git and Workflow Shortcuts
+
+- When user says "ship", it means:
+  - Commit the current work via git
+  - Open a Pull Request for the current branch
+  - If no relevant branch exists, propose creating a new branch and get user verification
