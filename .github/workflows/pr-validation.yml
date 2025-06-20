@@ -6,10 +6,15 @@ on:
   pull_request_target:
     types: [opened, edited, synchronize, reopened]
 
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
 jobs:
   validate-pr:
     name: Validate PR Standards
-    uses: ./.github/workflows-reusable/pr-validation.yml
+    uses: ./.github/workflows/reusable-pr-validation.yml
     with:
       # Size configuration (customize per repository)
       small_max_lines: 400

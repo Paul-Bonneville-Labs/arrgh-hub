@@ -83,7 +83,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ github.token }}
 
       - name: Extract PR Information
         id: pr-info
@@ -164,7 +164,7 @@ jobs:
               ;;
           esac
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Update Project Documentation
         if: steps.pr-info.outputs.pr_merged == 'true' && steps.pr-info.outputs.pr_type == 'docs'
@@ -227,7 +227,7 @@ jobs:
           git commit -m "docs: update pending release notes for PR #$PR_NUMBER" || echo "No changes to commit"
           git push || echo "No changes to push"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Trigger Release Process
         if: inputs.enable_breaking_change_issues && steps.pr-info.outputs.pr_merged == 'true' && steps.pr-info.outputs.breaking_change == 'true'
@@ -269,7 +269,7 @@ jobs:
             --label "release-required,breaking-change,high-priority" \
             --assignee "$PR_AUTHOR"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Thank Contributor
         if: inputs.enable_contributor_thanks && steps.pr-info.outputs.pr_merged == 'true'
@@ -321,7 +321,7 @@ jobs:
           
           gh pr comment $PR_NUMBER --body "$COMMENT_BODY"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
 
   cleanup:
     name: Post-merge Cleanup
@@ -362,7 +362,7 @@ jobs:
           gh api repos/${{ github.repository }}/git/refs/heads/$BRANCH_NAME \
             -X DELETE || echo "Branch could not be deleted (may be protected or already deleted)"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Update Project Statistics
         run: |
