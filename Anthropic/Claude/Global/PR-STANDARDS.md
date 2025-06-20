@@ -151,12 +151,15 @@ Include this checklist in PR descriptions:
 ## 🏷️ Labeling Strategy
 
 ### Automatic Labels (via PR title)
-- `feat` → `enhancement`
-- `fix` → `bug`
-- `docs` → `documentation`
-- `test` → `testing`
-- `refactor` → `refactoring`
-- `build/ci` → `ci-cd`
+- `feat` → `enhancement` (existing label)
+- `fix` → `bug` (existing label)
+- `docs` → `documentation` (existing label)
+- `test` → `testing` (auto-created: green #0e8a16)
+- `refactor` → `refactoring` (auto-created: yellow #fbca04)
+- `style` → `style` (auto-created: pink #f9d0c4)
+- `build/ci` → `ci-cd` (auto-created: green #0e8a16)
+- `perf` → `performance` (auto-created: purple #d4c5f9)
+- `chore` → `chore` (auto-created: cream #fef2c0)
 
 ### Manual Labels
 - `breaking-change` - For breaking changes
@@ -222,10 +225,19 @@ When creating pull requests:
 ### GitHub Actions Integration
 This standard supports:
 - **PR title validation** (conventional commits)
-- **Automatic labeling** based on title/content
+- **Automatic labeling** with smart label creation
 - **Size validation** (warn if too large)
 - **Template compliance** checking
 - **Link validation** (issues, docs)
+- **Security scanning** for sensitive changes
+- **Post-merge automation** (auto-cleanup, release notes)
+
+### Auto-Label Creation System
+Our workflows automatically create missing labels when needed:
+- **Safe label creation**: Labels are created with appropriate colors and descriptions
+- **Graceful fallback**: If label creation fails, workflow continues without error
+- **Consistent styling**: Auto-created labels follow color scheme conventions
+- **No workflow interruption**: Missing labels no longer cause workflow failures
 
 ### Configuration Examples
 ```yaml
@@ -353,5 +365,12 @@ Implements user authentication system using OAuth2 with Google and GitHub provid
 
 ---
 
-*Last Updated: 2025-01-21*
-*Next Review: 2025-04-21* 
+*Last Updated: 2025-06-20*
+*Next Review: 2025-09-20*
+
+### Recent Updates (v1.1.0)
+- ✅ Added auto-label creation system to prevent workflow failures
+- ✅ Enhanced post-merge automation workflows  
+- ✅ Fixed event detection logic errors in approval workflows
+- ✅ Updated label mapping to reflect actual workflow behavior
+- ✅ Improved error handling and graceful fallbacks 

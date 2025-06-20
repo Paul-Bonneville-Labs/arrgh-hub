@@ -1,7 +1,7 @@
 {
   "prStandards": {
-    "version": "1.0.0",
-    "lastUpdated": "2025-01-21",
+    "version": "1.1.0",
+    "lastUpdated": "2025-06-20",
     "conventionalCommits": {
       "types": [
         {
@@ -22,37 +22,51 @@
         {
           "type": "style",
           "description": "Code style/formatting (no logic changes)",
-          "label": "style"
+          "label": "style",
+          "autoCreate": true,
+          "color": "f9d0c4"
         },
         {
           "type": "refactor",
           "description": "Code restructuring (no feature/bug changes)",
-          "label": "refactoring"
+          "label": "refactoring",
+          "autoCreate": true,
+          "color": "fbca04"
         },
         {
           "type": "test",
           "description": "Adding or modifying tests",
-          "label": "testing"
+          "label": "testing",
+          "autoCreate": true,
+          "color": "0e8a16"
         },
         {
           "type": "build",
           "description": "Build system, dependencies, CI/CD changes",
-          "label": "ci-cd"
+          "label": "ci-cd",
+          "autoCreate": true,
+          "color": "0e8a16"
         },
         {
           "type": "chore",
           "description": "Maintenance tasks, configuration updates",
-          "label": "chore"
+          "label": "chore",
+          "autoCreate": true,
+          "color": "fef2c0"
         },
         {
           "type": "perf",
           "description": "Performance improvements",
-          "label": "performance"
+          "label": "performance",
+          "autoCreate": true,
+          "color": "d4c5f9"
         },
         {
           "type": "ci",
           "description": "Continuous integration changes",
-          "label": "ci-cd"
+          "label": "ci-cd",
+          "autoCreate": true,
+          "color": "0e8a16"
         }
       ]
     },
