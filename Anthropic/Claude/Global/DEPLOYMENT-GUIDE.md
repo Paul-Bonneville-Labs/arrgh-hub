@@ -64,10 +64,10 @@ ai-common/
 ├── .github/
 │   ├── scripts/
 │   │   └── deploy-pr-standards.sh   # Deployment automation
-│   ├── workflows-reusable/          # Reusable workflow library
-│   │   ├── pr-validation.yml
-│   │   └── pr-approved.yml
-│   ├── workflows/                   # Example implementations
+│   ├── workflows/                   # All workflows (main and reusable)
+│   │   ├── reusable-pr-validation.yml
+│   │   └── reusable-pr-approved.yml
+│   │   # Wrapper workflows
 │   │   ├── pr-validation.yml
 │   │   └── pr-approved.yml
 │   ├── pull_request_template.md     # Standard PR template
@@ -81,8 +81,11 @@ ai-common/
 target-repo/
 ├── Anthropic/Claude/Global/         # Deployed documentation
 ├── .github/
-│   ├── workflows-reusable/          # Reusable workflows
-│   ├── workflows/                   # Thin wrapper workflows
+│   ├── workflows/                   # All workflows
+│   │   ├── pr-validation.yml       # Wrapper workflow
+│   │   ├── pr-approved.yml         # Wrapper workflow
+│   │   ├── reusable-pr-validation.yml  # Reusable workflow
+│   │   └── reusable-pr-approved.yml    # Reusable workflow
 │   ├── pull_request_template.md     # PR template
 │   └── pr-automation-config.yml     # Local configuration
 └── (project files...)
@@ -186,7 +189,7 @@ done
 
 ### Updating the Central System
 
-1. **Modify reusable workflows** in `.github/workflows-reusable/`
+1. **Modify reusable workflows** in `.github/workflows/` (prefixed with `reusable-`)
 2. **Update documentation** in `Anthropic/Claude/Global/`
 3. **Test changes** in ai-common first
 4. **Deploy updates** to target repositories
@@ -200,7 +203,7 @@ git tag -a pr-standards-v1.2.0 -m "PR Standards System v1.2.0"
 git push origin pr-standards-v1.2.0
 
 # Use specific versions in target repos
-uses: pbonneville/ai-common/.github/workflows-reusable/pr-validation.yml@pr-standards-v1.2.0
+uses: pbonneville/ai-common/.github/workflows/reusable-pr-validation.yml@pr-standards-v1.2.0
 ```
 
 #### Update Propagation
