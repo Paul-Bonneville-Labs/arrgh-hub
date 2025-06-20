@@ -94,6 +94,17 @@ jobs:
           echo "Event action: '${{ github.event.action }}'"
           echo "Repository: ${{ github.repository }}"
           
+          # Debug available commands
+          echo "=== Debug: Available Commands ==="
+          which echo || echo "echo command not found"
+          which sed || echo "sed command not found"
+          which grep || echo "grep command not found"
+          
+          # Test basic shell operations
+          echo "=== Debug: Basic Shell Test ==="
+          test_var="test_value"
+          echo "test_var=$test_var"
+          
           # Initialize variables with error handling
           PR_NUMBER=""
           PR_TITLE=""
