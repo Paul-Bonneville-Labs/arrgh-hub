@@ -1,6 +1,6 @@
 # ai-common
 
-A comprehensive AI development toolkit featuring automated PR standards and guardrails for AI-assisted coding agents, plus Claude Code global configuration management.
+A continuously evolving AI development toolkit featuring automated PR standards and guardrails for AI-assisted coding agents, plus Claude Code global configuration management. This dynamic repository adapts to the rapidly changing landscape of AI-assisted development, capturing lessons learned, best practices, and emerging patterns as AI coding tools mature.
 
 ## Overview
 
