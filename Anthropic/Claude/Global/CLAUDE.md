@@ -60,6 +60,7 @@
   - Before committing code to GitHub, always be sure that the changes you're about to commit makes sense on the branch that you are currently using
   - Seek user input if you are not sure if code should be committed to the current branch or not
   - Take a moment to think carefully about your branch and commit choice
+  - When you were creating a PR, be sure to use consistent format for the description
 
 # ⚠️ CRITICAL: Planning Session Export Protocol (ALWAYS CHECK) ⚠️
 
