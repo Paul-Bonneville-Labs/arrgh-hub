@@ -1,0 +1,379 @@
+name: Reusable PR Approved Actions
+
+on:
+  workflow_call:
+    inputs:
+      # Auto-merge configuration
+      enable_auto_merge:
+        description: 'Enable automatic merging for safe PR types'
+        required: false
+        type: boolean
+        default: true
+      auto_merge_types:
+        description: 'Comma-separated list of PR types safe for auto-merge'
+        required: false
+        type: string
+        default: 'docs,test,style,chore'
+      auto_merge_method:
+        description: 'Merge method for auto-merge (merge, squash, rebase)'
+        required: false
+        type: string
+        default: 'squash'
+      
+      # Feature toggles
+      enable_release_notes:
+        description: 'Enable automatic release notes generation'
+        required: false
+        type: boolean
+        default: true
+      enable_breaking_change_issues:
+        description: 'Create issues for breaking changes'
+        required: false
+        type: boolean
+        default: true
+      enable_contributor_thanks:
+        description: 'Thank contributors on merge'
+        required: false
+        type: boolean
+        default: true
+      enable_branch_cleanup:
+        description: 'Auto-delete feature branches'
+        required: false
+        type: boolean
+        default: true
+      
+      # Paths and configuration
+      standards_path:
+        description: 'Path to PR standards documentation'
+        required: false
+        type: string
+        default: 'Anthropic/Claude/Global/PR-STANDARDS.md'
+      release_notes_path:
+        description: 'Path for pending release notes'
+        required: false
+        type: string
+        default: '.github/PENDING_RELEASE_NOTES.md'
+      
+      # Branch patterns
+      feature_branch_patterns:
+        description: 'Comma-separated patterns for auto-deletable branches'
+        required: false
+        type: string
+        default: 'feature/*,fix/*,docs/*,chore/*'
+      
+      # Release note types
+      release_note_types:
+        description: 'Comma-separated PR types to include in release notes'
+        required: false
+        type: string
+        default: 'feat,fix,perf'
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  handle-approval:
+    name: Handle PR Approval
+    runs-on: ubuntu-latest
+    if: github.event.review.state == 'approved' || (github.event.action == 'closed' && github.event.pull_request.merged == true)
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract PR Information
+        id: pr-info
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            # PR was merged
+            PR_NUMBER="${{ github.event.pull_request.number }}"
+            PR_TITLE="${{ github.event.pull_request.title }}"
+            PR_BODY="${{ github.event.pull_request.body }}"
+            PR_AUTHOR="${{ github.event.pull_request.user.login }}"
+            PR_MERGED="true"
+            BRANCH_NAME="${{ github.event.pull_request.head.ref }}"
+          else
+            # PR was approved
+            PR_NUMBER="${{ github.event.pull_request.number }}"
+            PR_TITLE="${{ github.event.pull_request.title }}"
+            PR_BODY="${{ github.event.pull_request.body }}"
+            PR_AUTHOR="${{ github.event.pull_request.user.login }}"
+            PR_MERGED="false"
+            BRANCH_NAME="${{ github.event.pull_request.head.ref }}"
+          fi
+          
+          # Extract PR type from title
+          TYPE=$(echo "$PR_TITLE" | sed -n 's/^\([a-z]*\).*/\1/p')
+          
+          echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
+          echo "pr_title=$PR_TITLE" >> $GITHUB_OUTPUT
+          echo "pr_type=$TYPE" >> $GITHUB_OUTPUT
+          echo "pr_author=$PR_AUTHOR" >> $GITHUB_OUTPUT
+          echo "pr_merged=$PR_MERGED" >> $GITHUB_OUTPUT
+          echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
+          
+          # Check if breaking change
+          if [[ "$PR_TITLE" == *"!"* ]] || [[ "$PR_BODY" == *"BREAKING CHANGE"* ]]; then
+            echo "breaking_change=true" >> $GITHUB_OUTPUT
+          else
+            echo "breaking_change=false" >> $GITHUB_OUTPUT
+          fi
+          
+          # Check if type is safe for auto-merge
+          AUTO_MERGE_TYPES="${{ inputs.auto_merge_types }}"
+          if [[ ",$AUTO_MERGE_TYPES," == *",$TYPE,"* ]]; then
+            echo "auto_merge_safe=true" >> $GITHUB_OUTPUT
+          else
+            echo "auto_merge_safe=false" >> $GITHUB_OUTPUT
+          fi
+          
+          # Check if type should be in release notes
+          RELEASE_TYPES="${{ inputs.release_note_types }}"
+          if [[ ",$RELEASE_TYPES," == *",$TYPE,"* ]] || [ "${{ steps.pr-info.outputs.breaking_change }}" == "true" ]; then
+            echo "include_in_release=true" >> $GITHUB_OUTPUT
+          else
+            echo "include_in_release=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Auto-merge if Appropriate
+        if: inputs.enable_auto_merge && steps.pr-info.outputs.pr_merged == 'false' && steps.pr-info.outputs.auto_merge_safe == 'true'
+        run: |
+          PR_NUMBER="${{ steps.pr-info.outputs.pr_number }}"
+          PR_TYPE="${{ steps.pr-info.outputs.pr_type }}"
+          MERGE_METHOD="${{ inputs.auto_merge_method }}"
+          
+          echo "Auto-merging safe PR type: $PR_TYPE using method: $MERGE_METHOD"
+          
+          case $MERGE_METHOD in
+            merge)
+              gh pr merge $PR_NUMBER --merge --auto
+              ;;
+            squash)
+              gh pr merge $PR_NUMBER --squash --auto
+              ;;
+            rebase)
+              gh pr merge $PR_NUMBER --rebase --auto
+              ;;
+            *)
+              echo "Unknown merge method: $MERGE_METHOD, defaulting to squash"
+              gh pr merge $PR_NUMBER --squash --auto
+              ;;
+          esac
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update Project Documentation
+        if: steps.pr-info.outputs.pr_merged == 'true' && steps.pr-info.outputs.pr_type == 'docs'
+        run: |
+          echo "Documentation PR merged - can trigger documentation rebuild here"
+          # Add any documentation-specific automation here
+          # e.g., trigger documentation site rebuild, update README, etc.
+
+      - name: Prepare Release Notes
+        if: inputs.enable_release_notes && steps.pr-info.outputs.pr_merged == 'true' && steps.pr-info.outputs.include_in_release == 'true'
+        run: |
+          PR_TITLE="${{ steps.pr-info.outputs.pr_title }}"
+          PR_TYPE="${{ steps.pr-info.outputs.pr_type }}"
+          PR_AUTHOR="${{ steps.pr-info.outputs.pr_author }}"
+          PR_NUMBER="${{ steps.pr-info.outputs.pr_number }}"
+          BREAKING="${{ steps.pr-info.outputs.breaking_change }}"
+          RELEASE_FILE="${{ inputs.release_notes_path }}"
+          
+          # Determine release note category
+          case $PR_TYPE in
+            feat)
+              CATEGORY="### ✨ New Features"
+              ;;
+            fix)
+              CATEGORY="### 🐛 Bug Fixes"
+              ;;
+            perf)
+              CATEGORY="### ⚡ Performance Improvements"
+              ;;
+            *)
+              CATEGORY="### 🔧 Other Changes"
+              ;;
+          esac
+          
+          if [ "$BREAKING" == "true" ]; then
+            CATEGORY="### ⚠️ BREAKING CHANGES"
+          fi
+          
+          # Create or update release notes file
+          if [ ! -f "$RELEASE_FILE" ]; then
+            echo "# Pending Release Notes" > "$RELEASE_FILE"
+            echo "" >> "$RELEASE_FILE"
+            echo "Generated automatically from merged PRs. Review and edit before creating a release." >> "$RELEASE_FILE"
+            echo "" >> "$RELEASE_FILE"
+          fi
+          
+          # Check if category already exists, if not add it
+          if ! grep -q "^$CATEGORY" "$RELEASE_FILE"; then
+            echo "" >> "$RELEASE_FILE"
+            echo "$CATEGORY" >> "$RELEASE_FILE"
+          fi
+          
+          # Add this PR to release notes (append after the category line)
+          sed -i "/^$CATEGORY/a - $PR_TITLE (#$PR_NUMBER) by @$PR_AUTHOR" "$RELEASE_FILE"
+          
+          # Commit updated release notes
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "$RELEASE_FILE"
+          git commit -m "docs: update pending release notes for PR #$PR_NUMBER" || echo "No changes to commit"
+          git push || echo "No changes to push"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Trigger Release Process
+        if: inputs.enable_breaking_change_issues && steps.pr-info.outputs.pr_merged == 'true' && steps.pr-info.outputs.breaking_change == 'true'
+        run: |
+          PR_NUMBER="${{ steps.pr-info.outputs.pr_number }}"
+          PR_TITLE="${{ steps.pr-info.outputs.pr_title }}"
+          PR_AUTHOR="${{ steps.pr-info.outputs.pr_author }}"
+          
+          echo "Breaking change detected - creating release planning issue"
+          
+          # Create an issue for release planning
+          ISSUE_BODY="## 🚨 Breaking Change Release Required
+          
+          A breaking change was merged in PR #$PR_NUMBER:
+          **$PR_TITLE**
+          
+          ### Action Required:
+          - [ ] Review all pending changes since last release
+          - [ ] Update CHANGELOG.md with breaking changes
+          - [ ] Plan migration guide for users
+          - [ ] Consider major version bump
+          - [ ] Test upgrade scenarios
+          - [ ] Create release when ready
+          
+          ### Breaking Change Details:
+          See PR #$PR_NUMBER for full details of the breaking change.
+          
+          ### Related Documentation:
+          - [Release Process](RELEASE.md) (if exists)
+          - [PR Standards](${{ inputs.standards_path }})
+          - [Pending Release Notes](${{ inputs.release_notes_path }})
+          
+          ---
+          *This issue was created automatically by the PR Approved workflow.*"
+          
+          gh issue create \
+            --title "⚠️ Release Required: Breaking Change in PR #$PR_NUMBER" \
+            --body "$ISSUE_BODY" \
+            --label "release-required,breaking-change,high-priority" \
+            --assignee "$PR_AUTHOR"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Thank Contributor
+        if: inputs.enable_contributor_thanks && steps.pr-info.outputs.pr_merged == 'true'
+        run: |
+          PR_NUMBER="${{ steps.pr-info.outputs.pr_number }}"
+          PR_AUTHOR="${{ steps.pr-info.outputs.pr_author }}"
+          PR_TYPE="${{ steps.pr-info.outputs.pr_type }}"
+          STANDARDS_PATH="${{ inputs.standards_path }}"
+          
+          # Different thanks based on PR type
+          case $PR_TYPE in
+            feat)
+              THANKS_MSG="🎉 Thanks @$PR_AUTHOR for the new feature! Your contribution helps make this project better."
+              ;;
+            fix)
+              THANKS_MSG="🐛 Thanks @$PR_AUTHOR for the bug fix! Users will appreciate this improvement."
+              ;;
+            docs)
+              THANKS_MSG="📚 Thanks @$PR_AUTHOR for improving our documentation! Clear docs help everyone."
+              ;;
+            test)
+              THANKS_MSG="🧪 Thanks @$PR_AUTHOR for adding tests! Better test coverage benefits the whole project."
+              ;;
+            perf)
+              THANKS_MSG="⚡ Thanks @$PR_AUTHOR for the performance improvement! Faster is always better."
+              ;;
+            refactor)
+              THANKS_MSG="🔧 Thanks @$PR_AUTHOR for the refactoring! Cleaner code benefits everyone."
+              ;;
+            *)
+              THANKS_MSG="🙏 Thanks @$PR_AUTHOR for your contribution!"
+              ;;
+          esac
+          
+          # Add metrics info
+          COMMENT_BODY="$THANKS_MSG
+
+          ### 📊 Contribution Stats:
+          - **PR Type**: \`$PR_TYPE\`
+          - **Status**: ✅ Merged
+          - **Branch**: \`${{ steps.pr-info.outputs.branch_name }}\`
+          
+          ### 📚 Resources:
+          - Follow our [PR Standards]($STANDARDS_PATH) for future contributions
+          - Check out our [Contributing Guide](CONTRIBUTING.md) (if it exists)
+          
+          ---
+          *Automated message from PR Approved workflow*"
+          
+          gh pr comment $PR_NUMBER --body "$COMMENT_BODY"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  cleanup:
+    name: Post-merge Cleanup
+    runs-on: ubuntu-latest
+    if: github.event.action == 'closed' && github.event.pull_request.merged == true
+    steps:
+      - name: Extract Branch Information
+        id: branch-info
+        run: |
+          BRANCH_NAME="${{ github.event.pull_request.head.ref }}"
+          FEATURE_PATTERNS="${{ inputs.feature_branch_patterns }}"
+          
+          echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
+          
+          # Check if branch matches any feature patterns
+          SHOULD_DELETE="false"
+          IFS=',' read -ra PATTERNS <<< "$FEATURE_PATTERNS"
+          for pattern in "${PATTERNS[@]}"; do
+            # Convert glob pattern to regex for basic matching
+            regex_pattern=$(echo "$pattern" | sed 's/\*/.*/')
+            if [[ "$BRANCH_NAME" =~ $regex_pattern ]]; then
+              SHOULD_DELETE="true"
+              echo "Branch $BRANCH_NAME matches pattern $pattern"
+              break
+            fi
+          done
+          
+          echo "should_delete=$SHOULD_DELETE" >> $GITHUB_OUTPUT
+
+      - name: Delete Feature Branch
+        if: inputs.enable_branch_cleanup && steps.branch-info.outputs.should_delete == 'true'
+        run: |
+          BRANCH_NAME="${{ steps.branch-info.outputs.branch_name }}"
+          
+          echo "Cleaning up feature branch: $BRANCH_NAME"
+          
+          # Delete the branch (if it's not protected)
+          gh api repos/${{ github.repository }}/git/refs/heads/$BRANCH_NAME \
+            -X DELETE || echo "Branch could not be deleted (may be protected or already deleted)"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update Project Statistics
+        run: |
+          PR_NUMBER="${{ github.event.pull_request.number }}"
+          PR_AUTHOR="${{ github.event.pull_request.user.login }}"
+          PR_TYPE=$(echo "${{ github.event.pull_request.title }}" | sed -n 's/^\([a-z]*\).*/\1/p')
+          
+          echo "Updating project statistics for merged PR #$PR_NUMBER by @$PR_AUTHOR (type: $PR_TYPE)"
+          # Here you could integrate with:
+          # - Analytics tools
+          # - Contributor statistics
+          # - Project dashboards
+          # - Slack/Discord notifications
+          # - etc. 
