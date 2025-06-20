@@ -88,7 +88,7 @@ jobs:
       - name: Extract PR Information
         id: pr-info
         run: |
-          if [ "${{ github.event_name }}" == "pull_request" ]; then
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
             # PR was merged
             PR_NUMBER="${{ github.event.pull_request.number }}"
             PR_TITLE="${{ github.event.pull_request.title }}"
@@ -133,7 +133,7 @@ jobs:
           
           # Check if type should be in release notes
           RELEASE_TYPES="${{ inputs.release_note_types }}"
-          if [[ ",$RELEASE_TYPES," == *",$TYPE,"* ]] || [ "${{ steps.pr-info.outputs.breaking_change }}" == "true" ]; then
+          if [[ ",$RELEASE_TYPES," == *",$TYPE,"* ]] || [ "${{ steps.pr-info.outputs.breaking_change }}" = "true" ]; then
             echo "include_in_release=true" >> $GITHUB_OUTPUT
           else
             echo "include_in_release=false" >> $GITHUB_OUTPUT
@@ -199,7 +199,7 @@ jobs:
               ;;
           esac
           
-          if [ "$BREAKING" == "true" ]; then
+          if [ "$BREAKING" = "true" ]; then
             CATEGORY="### ⚠️ BREAKING CHANGES"
           fi
           
