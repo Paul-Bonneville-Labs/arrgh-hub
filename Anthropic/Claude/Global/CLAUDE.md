@@ -54,6 +54,12 @@
   - User approval for branch creation
   - Focused, aligned work on each branch
   - Proper git workflow hygiene
+  
+  ## Additional Commit Considerations
+
+  - Before committing code to GitHub, always be sure that the changes you're about to commit makes sense on the branch that you are currently using
+  - Seek user input if you are not sure if code should be committed to the current branch or not
+  - Take a moment to think carefully about your branch and commit choice
 
 # ⚠️ CRITICAL: Planning Session Export Protocol (ALWAYS CHECK) ⚠️
 
