@@ -405,12 +405,12 @@ jobs:
           # Apply labels if security or dependency changes detected
           if [ ! -z "$SECURITY_FILES" ]; then
             echo "Security-related files detected!"
-            gh pr edit $PR_NUMBER --add-label "security"
+            gh pr edit $PR_NUMBER --repo ${{ github.repository }} --add-label "security"
           fi
           
           if [ ! -z "$DEPENDENCY_FILES" ]; then
             echo "Dependency files detected!"
-            gh pr edit $PR_NUMBER --add-label "dependencies"
+            gh pr edit $PR_NUMBER --repo ${{ github.repository }} --add-label "dependencies"
           fi
         env:
           GITHUB_TOKEN: ${{ github.token }}
