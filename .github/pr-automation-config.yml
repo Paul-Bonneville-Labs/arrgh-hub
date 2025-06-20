@@ -1,0 +1,120 @@
+# PR Automation Configuration
+# This file controls the behavior of the PR validation and approval workflows
+
+# PR Size Limits
+size_limits:
+  small:
+    max_lines: 400
+    max_files: 10
+  medium:
+    max_lines: 800
+    max_files: 15
+  large:
+    max_lines: 1500
+    max_files: 25
+
+# Auto-merge Settings
+auto_merge:
+  enabled: true
+  safe_types:
+    - docs
+    - test
+    - style
+    - chore
+  require_approval_count: 1
+  exclude_breaking_changes: true
+
+# Label Configuration
+labels:
+  by_type:
+    feat: "enhancement"
+    fix: "bug"
+    docs: "documentation"
+    test: "testing"
+    refactor: "refactoring"
+    style: "style"
+    build: "ci-cd"
+    ci: "ci-cd"
+    perf: "performance"
+    chore: "chore"
+  special:
+    breaking_change: "breaking-change"
+    security: "security"
+    dependencies: "dependencies"
+    needs_description: "needs-description-update"
+    size_warning: "large-pr"
+
+# Required PR Description Sections
+required_sections:
+  - "## Summary"
+  - "## Changes Made"
+  - "## Testing"
+  - "## PR Checklist"
+
+# Security Scanning
+security:
+  file_patterns:
+    - "auth"
+    - "security"
+    - "password"
+    - "token"
+    - "secret"
+    - "key"
+    - "crypto"
+    - "ssl"
+    - "tls"
+    - "cert"
+  dependency_files:
+    - "package.json"
+    - "package-lock.json"
+    - "requirements.txt"
+    - "Gemfile"
+    - "Gemfile.lock"
+    - "go.mod"
+    - "go.sum"
+    - "Cargo.toml"
+    - "Cargo.lock"
+
+# Notification Settings
+notifications:
+  thank_contributors: true
+  size_warnings: true
+  missing_sections_warning: true
+  metrics_reporting: true
+
+# Branch Cleanup
+cleanup:
+  auto_delete_feature_branches: true
+  protected_branch_patterns:
+    - "main"
+    - "master"
+    - "develop"
+    - "release/*"
+  delete_patterns:
+    - "feature/*"
+    - "fix/*"
+    - "docs/*"
+    - "chore/*"
+
+# Release Automation
+release:
+  auto_generate_notes: true
+  breaking_change_issue: true
+  categorize_changes: true
+  assign_to_author: true
+
+# Conventional Commits Configuration
+conventional_commits:
+  types:
+    - feat
+    - fix
+    - docs
+    - style
+    - refactor
+    - test
+    - build
+    - chore
+    - perf
+    - ci
+  scopes_required: false
+  breaking_change_indicator: "!" 
