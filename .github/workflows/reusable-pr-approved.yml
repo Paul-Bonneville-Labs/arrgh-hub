@@ -88,27 +88,79 @@ jobs:
       - name: Extract PR Information
         id: pr-info
         run: |
+          # Add debugging output
+          echo "=== Debug: GitHub Event Context ==="
+          echo "Event name: ${{ github.event_name }}"
+          echo "Event action: ${{ github.event.action }}"
+          echo "Repository: ${{ github.repository }}"
+          
+          # Initialize variables with error handling
+          PR_NUMBER=""
+          PR_TITLE=""
+          PR_BODY=""
+          PR_AUTHOR=""
+          PR_MERGED="false"
+          BRANCH_NAME=""
+          
+          # Determine event context and extract PR information
           if [ "${{ github.event_name }}" = "pull_request" ]; then
-            # PR was merged
+            # This is a pull_request event (likely 'closed' action for merge)
+            echo "=== Processing pull_request event ==="
+            if [ "${{ github.event.action }}" = "closed" ] && [ "${{ github.event.pull_request.merged }}" = "true" ]; then
+              echo "PR was merged"
+              PR_MERGED="true"
+            else
+              echo "PR was closed but not merged"
+              PR_MERGED="false"
+            fi
+            
+            # Extract PR data from pull_request event
             PR_NUMBER="${{ github.event.pull_request.number }}"
             PR_TITLE="${{ github.event.pull_request.title }}"
             PR_BODY="${{ github.event.pull_request.body }}"
             PR_AUTHOR="${{ github.event.pull_request.user.login }}"
-            PR_MERGED="true"
             BRANCH_NAME="${{ github.event.pull_request.head.ref }}"
-          else
-            # PR was approved
-            PR_NUMBER="${{ github.event.pull_request.number }}"
-            PR_TITLE="${{ github.event.pull_request.title }}"
-            PR_BODY="${{ github.event.pull_request.body }}"
-            PR_AUTHOR="${{ github.event.pull_request.user.login }}"
+            
+          elif [ "${{ github.event_name }}" = "pull_request_review" ]; then
+            # This is a pull_request_review event (approval)
+            echo "=== Processing pull_request_review event ==="
+            echo "PR was approved"
             PR_MERGED="false"
+            
+            # Extract PR data from pull_request_review event
+            PR_NUMBER="${{ github.event.pull_request.number }}"
+            PR_TITLE="${{ github.event.pull_request.title }}"
+            PR_BODY="${{ github.event.pull_request.body }}"
+            PR_AUTHOR="${{ github.event.pull_request.user.login }}"
             BRANCH_NAME="${{ github.event.pull_request.head.ref }}"
+            
+          else
+            echo "=== ERROR: Unexpected event type ==="
+            echo "Event name '${{ github.event_name }}' is not supported"
+            exit 1
           fi
+          
+          # Validate required variables
+          if [ -z "$PR_NUMBER" ] || [ -z "$PR_TITLE" ] || [ -z "$PR_AUTHOR" ]; then
+            echo "=== ERROR: Missing required PR information ==="
+            echo "PR_NUMBER: '$PR_NUMBER'"
+            echo "PR_TITLE: '$PR_TITLE'"
+            echo "PR_AUTHOR: '$PR_AUTHOR'"
+            exit 1
+          fi
+          
+          echo "=== Extracted PR Information ==="
+          echo "PR Number: $PR_NUMBER"
+          echo "PR Title: $PR_TITLE"
+          echo "PR Author: $PR_AUTHOR"
+          echo "PR Merged: $PR_MERGED"
+          echo "Branch: $BRANCH_NAME"
           
           # Extract PR type from title
           TYPE=$(echo "$PR_TITLE" | sed -n 's/^\([a-z]*\).*/\1/p')
+          echo "Extracted PR type: '$TYPE'"
           
+          # Set basic outputs
           echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
           echo "pr_title=$PR_TITLE" >> $GITHUB_OUTPUT
           echo "pr_type=$TYPE" >> $GITHUB_OUTPUT
@@ -116,28 +168,35 @@ jobs:
           echo "pr_merged=$PR_MERGED" >> $GITHUB_OUTPUT
           echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
           
-          # Check if breaking change
+          # Check if breaking change (use local variable, not step output)
+          BREAKING_CHANGE="false"
           if [[ "$PR_TITLE" == *"!"* ]] || [[ "$PR_BODY" == *"BREAKING CHANGE"* ]]; then
-            echo "breaking_change=true" >> $GITHUB_OUTPUT
-          else
-            echo "breaking_change=false" >> $GITHUB_OUTPUT
+            BREAKING_CHANGE="true"
           fi
+          echo "breaking_change=$BREAKING_CHANGE" >> $GITHUB_OUTPUT
+          echo "Breaking change detected: $BREAKING_CHANGE"
           
           # Check if type is safe for auto-merge
           AUTO_MERGE_TYPES="${{ inputs.auto_merge_types }}"
           if [[ ",$AUTO_MERGE_TYPES," == *",$TYPE,"* ]]; then
             echo "auto_merge_safe=true" >> $GITHUB_OUTPUT
+            echo "Auto-merge safe: true"
           else
             echo "auto_merge_safe=false" >> $GITHUB_OUTPUT
+            echo "Auto-merge safe: false"
           fi
           
-          # Check if type should be in release notes
+          # Check if type should be in release notes (use local variable)
           RELEASE_TYPES="${{ inputs.release_note_types }}"
-          if [[ ",$RELEASE_TYPES," == *",$TYPE,"* ]] || [ "${{ steps.pr-info.outputs.breaking_change }}" = "true" ]; then
+          if [[ ",$RELEASE_TYPES," == *",$TYPE,"* ]] || [ "$BREAKING_CHANGE" = "true" ]; then
             echo "include_in_release=true" >> $GITHUB_OUTPUT
+            echo "Include in release notes: true"
           else
             echo "include_in_release=false" >> $GITHUB_OUTPUT
+            echo "Include in release notes: false"
           fi
+          
+          echo "=== PR Information extraction completed successfully ==="
 
       - name: Auto-merge if Appropriate
         if: inputs.enable_auto_merge && steps.pr-info.outputs.pr_merged == 'false' && steps.pr-info.outputs.auto_merge_safe == 'true'
