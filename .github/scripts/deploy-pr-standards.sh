@@ -151,6 +151,9 @@ if ! gh repo view "$TARGET_REPO" --json name &> /dev/null; then
     exit 1
 fi
 
+# Store the source directory path
+SOURCE_DIR=$(pwd)
+
 # Create temporary directory for operations
 TEMP_DIR=$(mktemp -d)
 trap "rm -rf $TEMP_DIR" EXIT
@@ -192,7 +195,7 @@ declare -a WRAPPER_FILES=(
 copy_file() {
     local source_file="$1"
     local target_file="$2"
-    local source_path="$OLDPWD/$source_file"
+    local source_path="$SOURCE_DIR/$source_file"
     
     if [ ! -f "$source_path" ]; then
         print_warning "Source file not found: $source_file"
@@ -397,11 +400,19 @@ The workflows will activate on:
 - Documentation: [\`PR-STANDARDS.md\`](./Anthropic/Claude/Global/PR-STANDARDS.md)
 - Configuration: [\`.github/pr-automation-config.yml\`](./.github/pr-automation-config.yml)"
 
-    gh pr create \
+    # Try to create PR with labels, fallback without labels if they don't exist
+    if ! gh pr create \
         --title "feat: implement automated PR standards system" \
         --body "$PR_BODY" \
         --label "enhancement,automation,ci-cd" \
-        --draft
+        --draft 2>/dev/null; then
+        
+        print_warning "Some labels don't exist, creating PR without labels..."
+        gh pr create \
+            --title "feat: implement automated PR standards system" \
+            --body "$PR_BODY" \
+            --draft
+    fi
     
     PR_URL=$(gh pr view --json url --jq .url)
     
