@@ -114,8 +114,10 @@ Brief overview of what this PR accomplishes and why it's needed.
 ## 🔍 PR Size Guidelines
 
 ### Ideal Size Targets
-- **Lines of Code**: 200-400 LOC (excluding tests, generated code)
-- **Files Changed**: 5-10 files maximum
+- **Small PR**: ≤400 lines, ≤10 files
+- **Medium PR**: 400-800 lines, 10-15 files
+- **Large PR**: 800-1500 lines, 15-25 files
+- **Extra Large PR**: >1500 lines or >25 files (requires justification)
 - **Scope**: Single feature, bug fix, or logical unit of work
 
 ### Large PR Guidelines
