@@ -34,7 +34,7 @@ on:
         required: false
         type: number
         default: 25
-      
+
       # Feature toggles
       enable_size_validation:
         description: 'Enable PR size validation'
@@ -61,7 +61,7 @@ on:
         required: false
         type: boolean
         default: true
-      
+
       # Configuration
       config_file_path:
         description: 'Path to configuration file (optional)'
@@ -73,7 +73,7 @@ on:
         required: false
         type: string
         default: 'Anthropic/Claude/Global/PR-STANDARDS.md'
-      
+
       # Conventional commits
       allowed_types:
         description: 'Comma-separated list of allowed commit types'
@@ -106,7 +106,7 @@ jobs:
         id: load-config
         run: |
           CONFIG_FILE="${{ inputs.config_file_path }}"
-          
+
           # Set default values from inputs
           echo "small_max_lines=${{ inputs.small_max_lines }}" >> $GITHUB_OUTPUT
           echo "small_max_files=${{ inputs.small_max_files }}" >> $GITHUB_OUTPUT
@@ -114,7 +114,7 @@ jobs:
           echo "medium_max_files=${{ inputs.medium_max_files }}" >> $GITHUB_OUTPUT
           echo "large_max_lines=${{ inputs.large_max_lines }}" >> $GITHUB_OUTPUT
           echo "large_max_files=${{ inputs.large_max_files }}" >> $GITHUB_OUTPUT
-          
+
           # Override with config file if it exists
           if [ -f "$CONFIG_FILE" ]; then
             echo "Configuration file found: $CONFIG_FILE"
@@ -160,14 +160,14 @@ jobs:
         id: pr-size
         run: |
           PR_NUMBER="${{ github.event.pull_request.number }}"
-          
+
           # Get changed files and lines
           REPO="${{ github.repository }}"
           CHANGED_FILES=$(gh pr view $PR_NUMBER --repo $REPO --json files --jq '.files | length')
           ADDITIONS=$(gh pr view $PR_NUMBER --repo $REPO --json additions --jq '.additions')
           DELETIONS=$(gh pr view $PR_NUMBER --repo $REPO --json deletions --jq '.deletions')
           TOTAL_CHANGES=$((ADDITIONS + DELETIONS))
-          
+
           # Get thresholds from config
           SMALL_LINES="${{ steps.load-config.outputs.small_max_lines }}"
           SMALL_FILES="${{ steps.load-config.outputs.small_max_files }}"
@@ -175,24 +175,24 @@ jobs:
           MEDIUM_FILES="${{ steps.load-config.outputs.medium_max_files }}"
           LARGE_LINES="${{ steps.load-config.outputs.large_max_lines }}"
           LARGE_FILES="${{ steps.load-config.outputs.large_max_files }}"
-          
+
           echo "Changed files: $CHANGED_FILES"
           echo "Total line changes: $TOTAL_CHANGES"
           echo "Thresholds - Small: $SMALL_LINES lines/$SMALL_FILES files, Medium: $MEDIUM_LINES lines/$MEDIUM_FILES files"
-          
+
           # Set outputs
           echo "changed_files=$CHANGED_FILES" >> $GITHUB_OUTPUT
           echo "total_changes=$TOTAL_CHANGES" >> $GITHUB_OUTPUT
           echo "additions=$ADDITIONS" >> $GITHUB_OUTPUT
           echo "deletions=$DELETIONS" >> $GITHUB_OUTPUT
-          
+
           # Check size thresholds
           if [ $TOTAL_CHANGES -gt $MEDIUM_LINES ] || [ $CHANGED_FILES -gt $MEDIUM_FILES ]; then
             echo "size_warning=true" >> $GITHUB_OUTPUT
           else
             echo "size_warning=false" >> $GITHUB_OUTPUT
           fi
-          
+
           if [ $TOTAL_CHANGES -gt $LARGE_LINES ] || [ $CHANGED_FILES -gt $LARGE_FILES ]; then
             echo "size_error=true" >> $GITHUB_OUTPUT
           else
@@ -206,24 +206,24 @@ jobs:
         run: |
           STANDARDS_PATH="${{ inputs.standards_path }}"
           COMMENT_BODY="## 📏 Large PR Detected
-          
+
           This PR is larger than recommended guidelines:
           - **Files changed**: ${{ steps.pr-size.outputs.changed_files }} (recommended: ≤${{ steps.load-config.outputs.small_max_files }})
           - **Total changes**: ${{ steps.pr-size.outputs.total_changes }} lines (recommended: ≤${{ steps.load-config.outputs.small_max_lines }})
-          
+
           ### Recommendations:
           - Consider breaking this into smaller, focused PRs
           - Add extra context in the description to help reviewers
           - Include detailed testing instructions
           - Consider using a draft PR for early feedback
-          
+
           ### Guidelines:
           - **Small PR**: ≤${{ steps.load-config.outputs.small_max_lines }} lines, ≤${{ steps.load-config.outputs.small_max_files }} files
-          - **Medium PR**: ${{ steps.load-config.outputs.small_max_lines }}-${{ steps.load-config.outputs.medium_max_lines }} lines, ${{ steps.load-config.outputs.small_max_files }}-${{ steps.load-config.outputs.medium_max_files }} files  
+          - **Medium PR**: ${{ steps.load-config.outputs.small_max_lines }}-${{ steps.load-config.outputs.medium_max_lines }} lines, ${{ steps.load-config.outputs.small_max_files }}-${{ steps.load-config.outputs.medium_max_files }} files
           - **Large PR**: ${{ steps.load-config.outputs.medium_max_lines }}+ lines, ${{ steps.load-config.outputs.medium_max_files }}+ files (requires justification)
-          
+
           See [PR Standards]($STANDARDS_PATH) for more details."
-          
+
           gh pr comment ${{ github.event.pull_request.number }} --repo ${{ github.repository }} --body "$COMMENT_BODY"
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -245,7 +245,7 @@ jobs:
         run: |
           PR_TITLE="${{ github.event.pull_request.title }}"
           echo "PR Title: $PR_TITLE"
-          
+
           # Extract type from conventional commit format
           TYPE=$(echo "$PR_TITLE" | sed -n 's/^\([a-z]*\).*/\1/p')
           echo "Extracted type: $TYPE"
@@ -255,7 +255,7 @@ jobs:
         run: |
           TYPE="${{ steps.pr-type.outputs.type }}"
           PR_NUMBER="${{ github.event.pull_request.number }}"
-          
+
           case $TYPE in
             feat)
               gh pr edit $PR_NUMBER --repo ${{ github.repository }} --add-label "enhancement"
@@ -295,12 +295,12 @@ jobs:
         run: |
           PR_TITLE="${{ github.event.pull_request.title }}"
           PR_NUMBER="${{ github.event.pull_request.number }}"
-          
+
           # Write PR body to file to handle special characters safely
           cat << 'EOF' > /tmp/pr_body_breaking.txt
           ${{ github.event.pull_request.body }}
           EOF
-          
+
           # Check for breaking change indicators
           if [[ "$PR_TITLE" == *"!"* ]] || grep -q "BREAKING CHANGE" /tmp/pr_body_breaking.txt; then
             echo "Breaking change detected!"
@@ -320,44 +320,44 @@ jobs:
           cat << 'EOF' > /tmp/pr_body.txt
           ${{ github.event.pull_request.body }}
           EOF
-          
+
           PR_NUMBER="${{ github.event.pull_request.number }}"
           STANDARDS_PATH="${{ inputs.standards_path }}"
-          
+
           # Check for required sections
           MISSING_SECTIONS=""
-          
+
           if ! grep -q "## Summary" /tmp/pr_body.txt; then
             MISSING_SECTIONS="$MISSING_SECTIONS\n- Summary"
           fi
-          
+
           if ! grep -q "## Changes Made" /tmp/pr_body.txt; then
             MISSING_SECTIONS="$MISSING_SECTIONS\n- Changes Made"
           fi
-          
+
           if ! grep -q "## Testing" /tmp/pr_body.txt; then
             MISSING_SECTIONS="$MISSING_SECTIONS\n- Testing"
           fi
-          
+
           if ! grep -q "## PR Checklist" /tmp/pr_body.txt; then
             MISSING_SECTIONS="$MISSING_SECTIONS\n- PR Checklist"
           fi
-          
+
           if [ ! -z "$MISSING_SECTIONS" ]; then
             COMMENT_BODY="## 📋 PR Description Missing Required Sections
-            
+
             The following required sections are missing from your PR description:
             $MISSING_SECTIONS
-            
+
             ### Required Sections:
             - **Summary** - Brief overview of what and why
             - **Changes Made** - Key modifications
             - **Testing** - Steps to test and coverage info
             - **PR Checklist** - Quality assurance checklist
-            
+
             Please update your PR description to include these sections.
             See our [PR Standards]($STANDARDS_PATH) for the complete template."
-            
+
             gh pr comment $PR_NUMBER --repo ${{ github.repository }} --body "$COMMENT_BODY"
             gh pr edit $PR_NUMBER --add-label "needs-description-update"
           else
@@ -379,23 +379,23 @@ jobs:
       - name: Check for Security-Related Changes
         run: |
           PR_NUMBER="${{ github.event.pull_request.number }}"
-          
+
           echo "PR Number: $PR_NUMBER"
           echo "Repository: ${{ github.repository }}"
           echo "Event Name: ${{ github.event_name }}"
-          
+
           echo "Getting changed files for PR #$PR_NUMBER..."
           # Get list of changed files
           CHANGED_FILES=$(gh pr view $PR_NUMBER --repo ${{ github.repository }} --json files --jq -r '.files[].path' || echo "")
-          
+
           echo "Changed files:"
           echo "$CHANGED_FILES"
-          
+
           SECURITY_KEYWORDS="auth|security|password|token|secret|key|crypto|ssl|tls|cert"
           SECURITY_FILES=""
-          
+
           echo "Checking changed files for security-related content..."
-          
+
           if [ -n "$CHANGED_FILES" ]; then
             while IFS= read -r file; do
               if echo "$file" | grep -qE "$SECURITY_KEYWORDS"; then
@@ -406,7 +406,7 @@ jobs:
           else
             echo "No changed files found"
           fi
-          
+
           # Check for dependency changes
           DEPENDENCY_FILES=""
           if [ -n "$CHANGED_FILES" ]; then
@@ -417,18 +417,18 @@ jobs:
               fi
             done <<< "$CHANGED_FILES"
           fi
-          
+
           # Apply labels if security or dependency changes detected
           if [ ! -z "$SECURITY_FILES" ]; then
             echo "Security-related files detected!"
             gh pr edit $PR_NUMBER --repo ${{ github.repository }} --add-label "security" || echo "Label 'security' may already exist"
           fi
-          
+
           if [ ! -z "$DEPENDENCY_FILES" ]; then
             echo "Dependency files detected!"
             gh pr edit $PR_NUMBER --repo ${{ github.repository }} --add-label "dependencies" || echo "Label 'dependencies' may already exist"
           fi
-          
+
           echo "Security check completed successfully"
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -442,25 +442,25 @@ jobs:
         run: |
           PR_NUMBER="${{ github.event.pull_request.number }}"
           REPO="${{ github.repository }}"
-          
+
           # Get PR data
           PR_DATA=$(gh pr view $PR_NUMBER --repo $REPO --json additions,deletions,files,title,body,author,createdAt)
-          
+
           ADDITIONS=$(echo "$PR_DATA" | jq -r '.additions')
-          DELETIONS=$(echo "$PR_DATA" | jq -r '.deletions') 
+          DELETIONS=$(echo "$PR_DATA" | jq -r '.deletions')
           FILES_COUNT=$(echo "$PR_DATA" | jq -r '.files | length')
           TITLE=$(echo "$PR_DATA" | jq -r '.title')
           AUTHOR=$(echo "$PR_DATA" | jq -r '.author.login')
-          
+
           # Calculate metrics
           TOTAL_CHANGES=$((ADDITIONS + DELETIONS))
-          
+
           # Get thresholds for size categorization
           SMALL_LINES="${{ inputs.small_max_lines }}"
           SMALL_FILES="${{ inputs.small_max_files }}"
           MEDIUM_LINES="${{ inputs.medium_max_lines }}"
           MEDIUM_FILES="${{ inputs.medium_max_files }}"
-          
+
           # Determine size category
           if [ $TOTAL_CHANGES -le $SMALL_LINES ] && [ $FILES_COUNT -le $SMALL_FILES ]; then
             SIZE_CATEGORY="Small"
@@ -472,7 +472,7 @@ jobs:
             SIZE_CATEGORY="Large"
             SIZE_EMOJI="🔴"
           fi
-          
+
           # Check title format
           ALLOWED_TYPES="${{ inputs.allowed_types }}"
           TYPE_PATTERN=$(echo "$ALLOWED_TYPES" | sed 's/,/|/g')
@@ -481,10 +481,10 @@ jobs:
           else
             TITLE_FORMAT="❌ Invalid"
           fi
-          
+
           # Create metrics comment
           METRICS_COMMENT="## 📊 PR Metrics
-          
+
           | Metric | Value |
           |--------|-------|
           | **Size Category** | $SIZE_EMOJI $SIZE_CATEGORY |
@@ -494,14 +494,14 @@ jobs:
           | **Files Changed** | $FILES_COUNT |
           | **Title Format** | $TITLE_FORMAT |
           | **Author** | @$AUTHOR |
-          
+
           ### Size Guidelines:
           - 🟢 **Small**: ≤$SMALL_LINES lines, ≤$SMALL_FILES files
           - 🟡 **Medium**: $SMALL_LINES-$MEDIUM_LINES lines, $SMALL_FILES-$MEDIUM_FILES files
           - 🔴 **Large**: $MEDIUM_LINES+ lines, $MEDIUM_FILES+ files
-          
+
           *Metrics generated automatically by PR Validation workflow*"
-          
+
           gh pr comment $PR_NUMBER --repo ${{ github.repository }} --body "$METRICS_COMMENT"
         env:
-          GITHUB_TOKEN: ${{ github.token }} 
+          GITHUB_TOKEN: ${{ github.token }}
