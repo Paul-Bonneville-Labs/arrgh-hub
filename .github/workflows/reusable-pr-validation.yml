@@ -132,7 +132,17 @@ jobs:
       - name: Validate PR Title (Conventional Commits)
         uses: amannn/action-semantic-pull-request@v5
         with:
-          types: ${{ inputs.allowed_types }}
+          types: |
+            feat
+            fix
+            docs
+            style
+            refactor
+            test
+            build
+            chore
+            perf
+            ci
           requireScope: ${{ inputs.require_scope }}
           subjectPattern: ^(?![A-Z]).+$
           subjectPatternError: |
@@ -283,11 +293,15 @@ jobs:
       - name: Check for Breaking Changes
         run: |
           PR_TITLE="${{ github.event.pull_request.title }}"
-          PR_BODY="${{ github.event.pull_request.body }}"
           PR_NUMBER="${{ github.event.pull_request.number }}"
           
+          # Write PR body to file to handle special characters safely
+          cat << 'EOF' > /tmp/pr_body_breaking.txt
+          ${{ github.event.pull_request.body }}
+          EOF
+          
           # Check for breaking change indicators
-          if [[ "$PR_TITLE" == *"!"* ]] || [[ "$PR_BODY" == *"BREAKING CHANGE"* ]]; then
+          if [[ "$PR_TITLE" == *"!"* ]] || grep -q "BREAKING CHANGE" /tmp/pr_body_breaking.txt; then
             echo "Breaking change detected!"
             gh pr edit $PR_NUMBER --add-label "breaking-change"
           fi
@@ -301,26 +315,30 @@ jobs:
     steps:
       - name: Check Required Sections
         run: |
-          PR_BODY="${{ github.event.pull_request.body }}"
+          # Write PR body to file to handle special characters safely
+          cat << 'EOF' > /tmp/pr_body.txt
+          ${{ github.event.pull_request.body }}
+          EOF
+          
           PR_NUMBER="${{ github.event.pull_request.number }}"
           STANDARDS_PATH="${{ inputs.standards_path }}"
           
           # Check for required sections
           MISSING_SECTIONS=""
           
-          if [[ "$PR_BODY" != *"## Summary"* ]]; then
+          if ! grep -q "## Summary" /tmp/pr_body.txt; then
             MISSING_SECTIONS="$MISSING_SECTIONS\n- Summary"
           fi
           
-          if [[ "$PR_BODY" != *"## Changes Made"* ]]; then
+          if ! grep -q "## Changes Made" /tmp/pr_body.txt; then
             MISSING_SECTIONS="$MISSING_SECTIONS\n- Changes Made"
           fi
           
-          if [[ "$PR_BODY" != *"## Testing"* ]]; then
+          if ! grep -q "## Testing" /tmp/pr_body.txt; then
             MISSING_SECTIONS="$MISSING_SECTIONS\n- Testing"
           fi
           
-          if [[ "$PR_BODY" != *"## PR Checklist"* ]]; then
+          if ! grep -q "## PR Checklist" /tmp/pr_body.txt; then
             MISSING_SECTIONS="$MISSING_SECTIONS\n- PR Checklist"
           fi
           
