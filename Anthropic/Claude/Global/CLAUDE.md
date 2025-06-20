@@ -57,10 +57,10 @@
   
   ## Additional Commit Considerations
 
-  - Before committing code to GitHub, always be sure that the changes you're about to commit makes sense on the branch that you are currently using
   - Seek user input if you are not sure if code should be committed to the current branch or not
   - Take a moment to think carefully about your branch and commit choice
-  - When you were creating a PR, be sure to use consistent format for the description
+  - When creating PRs, MUST follow the standards in `Anthropic/Claude/Global/PR-STANDARDS.md`
+  - CRITICAL: When committing work to a branch, ALWAYS verify that the branch is appropriate and NOT attached to a PR that has already been closed. Before committing code to GitHub, ultrathink about whether the changes you're about to commit make sense for the branch that you are currently using. Verify with the user if you are unsure
 
 # ⚠️ CRITICAL: Planning Session Export Protocol (ALWAYS CHECK) ⚠️
 

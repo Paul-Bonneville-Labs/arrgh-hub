@@ -1,0 +1,112 @@
+{
+  "prStandards": {
+    "version": "1.0.0",
+    "lastUpdated": "2025-01-21",
+    "conventionalCommits": {
+      "types": [
+        {
+          "type": "feat",
+          "description": "New features or functionality",
+          "label": "enhancement"
+        },
+        {
+          "type": "fix", 
+          "description": "Bug fixes",
+          "label": "bug"
+        },
+        {
+          "type": "docs",
+          "description": "Documentation changes only",
+          "label": "documentation"
+        },
+        {
+          "type": "style",
+          "description": "Code style/formatting (no logic changes)",
+          "label": "style"
+        },
+        {
+          "type": "refactor",
+          "description": "Code restructuring (no feature/bug changes)",
+          "label": "refactoring"
+        },
+        {
+          "type": "test",
+          "description": "Adding or modifying tests",
+          "label": "testing"
+        },
+        {
+          "type": "build",
+          "description": "Build system, dependencies, CI/CD changes",
+          "label": "ci-cd"
+        },
+        {
+          "type": "chore",
+          "description": "Maintenance tasks, configuration updates",
+          "label": "chore"
+        },
+        {
+          "type": "perf",
+          "description": "Performance improvements",
+          "label": "performance"
+        },
+        {
+          "type": "ci",
+          "description": "Continuous integration changes",
+          "label": "ci-cd"
+        }
+      ]
+    },
+    "titleRules": {
+      "maxLength": 50,
+      "case": "lowercase",
+      "mood": "imperative",
+      "endPunctuation": false,
+      "format": "<type>[optional scope]: <description>"
+    },
+    "sizeGuidelines": {
+      "targetLinesOfCode": {
+        "min": 200,
+        "max": 400
+      },
+      "maxFiles": 10,
+      "excludeFromCount": [
+        "test files",
+        "generated code",
+        "package-lock.json",
+        "yarn.lock"
+      ]
+    },
+    "requiredSections": [
+      "Summary",
+      "Changes Made",
+      "Related Issues",
+      "Testing",
+      "PR Checklist"
+    ],
+    "optionalSections": [
+      "Screenshots/Visuals",
+      "Breaking Changes",
+      "Performance Impact",
+      "Security Considerations",
+      "Documentation Updates",
+      "Additional Notes"
+    ],
+    "automation": {
+      "autoLabeling": true,
+      "titleValidation": true,
+      "sizeValidation": true,
+      "templateCompliance": true,
+      "issueLinking": true
+    },
+    "integrations": {
+      "github": {
+        "templatePath": ".github/pull_request_template.md",
+        "workflowPath": ".github/workflows/pr-validation.yml"
+      },
+      "claudeCode": {
+        "promptPath": "Anthropic/Claude/Global/CLAUDE-CODE-PR-PROMPT.md",
+        "standardsPath": "Anthropic/Claude/Global/PR-STANDARDS.md"
+      }
+    }
+  }
+} 
