@@ -162,9 +162,10 @@ jobs:
           PR_NUMBER="${{ github.event.pull_request.number }}"
           
           # Get changed files and lines
-          CHANGED_FILES=$(gh pr view $PR_NUMBER --json files --jq '.files | length')
-          ADDITIONS=$(gh pr view $PR_NUMBER --json additions --jq '.additions')
-          DELETIONS=$(gh pr view $PR_NUMBER --json deletions --jq '.deletions')
+          REPO="${{ github.repository }}"
+          CHANGED_FILES=$(gh pr view $PR_NUMBER --repo $REPO --json files --jq '.files | length')
+          ADDITIONS=$(gh pr view $PR_NUMBER --repo $REPO --json additions --jq '.additions')
+          DELETIONS=$(gh pr view $PR_NUMBER --repo $REPO --json deletions --jq '.deletions')
           TOTAL_CHANGES=$((ADDITIONS + DELETIONS))
           
           # Get thresholds from config
@@ -223,7 +224,7 @@ jobs:
           
           See [PR Standards]($STANDARDS_PATH) for more details."
           
-          gh pr comment ${{ github.event.pull_request.number }} --body "$COMMENT_BODY"
+          gh pr comment ${{ github.event.pull_request.number }} --repo ${{ github.repository }} --body "$COMMENT_BODY"
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
@@ -257,31 +258,31 @@ jobs:
           
           case $TYPE in
             feat)
-              gh pr edit $PR_NUMBER --add-label "enhancement"
+              gh pr edit $PR_NUMBER --repo ${{ github.repository }} --add-label "enhancement"
               ;;
             fix)
-              gh pr edit $PR_NUMBER --add-label "bug"
+              gh pr edit $PR_NUMBER --repo ${{ github.repository }} --add-label "bug"
               ;;
             docs)
-              gh pr edit $PR_NUMBER --add-label "documentation"
+              gh pr edit $PR_NUMBER --repo ${{ github.repository }} --add-label "documentation"
               ;;
             test)
-              gh pr edit $PR_NUMBER --add-label "testing"
+              gh pr edit $PR_NUMBER --repo ${{ github.repository }} --add-label "testing"
               ;;
             refactor)
-              gh pr edit $PR_NUMBER --add-label "refactoring"
+              gh pr edit $PR_NUMBER --repo ${{ github.repository }} --add-label "refactoring"
               ;;
             style)
-              gh pr edit $PR_NUMBER --add-label "style"
+              gh pr edit $PR_NUMBER --repo ${{ github.repository }} --add-label "style"
               ;;
             build|ci)
-              gh pr edit $PR_NUMBER --add-label "ci-cd"
+              gh pr edit $PR_NUMBER --repo ${{ github.repository }} --add-label "ci-cd"
               ;;
             perf)
-              gh pr edit $PR_NUMBER --add-label "performance"
+              gh pr edit $PR_NUMBER --repo ${{ github.repository }} --add-label "performance"
               ;;
             chore)
-              gh pr edit $PR_NUMBER --add-label "chore"
+              gh pr edit $PR_NUMBER --repo ${{ github.repository }} --add-label "chore"
               ;;
             *)
               echo "Unknown or no type found: $TYPE"
@@ -357,12 +358,12 @@ jobs:
             Please update your PR description to include these sections.
             See our [PR Standards]($STANDARDS_PATH) for the complete template."
             
-            gh pr comment $PR_NUMBER --body "$COMMENT_BODY"
+            gh pr comment $PR_NUMBER --repo ${{ github.repository }} --body "$COMMENT_BODY"
             gh pr edit $PR_NUMBER --add-label "needs-description-update"
           else
             echo "All required sections present!"
             # Remove the label if it exists
-            gh pr edit $PR_NUMBER --remove-label "needs-description-update" || true
+            gh pr edit $PR_NUMBER --repo ${{ github.repository }} --remove-label "needs-description-update" || true
           fi
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -380,7 +381,7 @@ jobs:
           PR_NUMBER="${{ github.event.pull_request.number }}"
           
           # Get list of changed files
-          CHANGED_FILES=$(gh pr view $PR_NUMBER --json files --jq -r '.files[].path')
+          CHANGED_FILES=$(gh pr view $PR_NUMBER --repo ${{ github.repository }} --json files --jq -r '.files[].path')
           
           SECURITY_KEYWORDS="auth|security|password|token|secret|key|crypto|ssl|tls|cert"
           SECURITY_FILES=""
@@ -422,9 +423,10 @@ jobs:
       - name: Collect and Report Metrics
         run: |
           PR_NUMBER="${{ github.event.pull_request.number }}"
+          REPO="${{ github.repository }}"
           
           # Get PR data
-          PR_DATA=$(gh pr view $PR_NUMBER --json additions,deletions,files,title,body,author,createdAt)
+          PR_DATA=$(gh pr view $PR_NUMBER --repo $REPO --json additions,deletions,files,title,body,author,createdAt)
           
           ADDITIONS=$(echo "$PR_DATA" | jq -r '.additions')
           DELETIONS=$(echo "$PR_DATA" | jq -r '.deletions') 
@@ -482,6 +484,6 @@ jobs:
           
           *Metrics generated automatically by PR Validation workflow*"
           
-          gh pr comment $PR_NUMBER --body "$METRICS_COMMENT"
+          gh pr comment $PR_NUMBER --repo ${{ github.repository }} --body "$METRICS_COMMENT"
         env:
           GITHUB_TOKEN: ${{ github.token }} 
