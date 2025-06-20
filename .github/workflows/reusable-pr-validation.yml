@@ -378,29 +378,42 @@ jobs:
 
       - name: Check for Security-Related Changes
         run: |
+          set -e  # Exit on error
           PR_NUMBER="${{ github.event.pull_request.number }}"
           
+          echo "Getting changed files for PR #$PR_NUMBER..."
           # Get list of changed files
           CHANGED_FILES=$(gh pr view $PR_NUMBER --repo ${{ github.repository }} --json files --jq -r '.files[].path')
+          
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
           
           SECURITY_KEYWORDS="auth|security|password|token|secret|key|crypto|ssl|tls|cert"
           SECURITY_FILES=""
           
           echo "Checking changed files for security-related content..."
           
-          while IFS= read -r file; do
-            if [[ "$file" =~ $SECURITY_KEYWORDS ]]; then
-              SECURITY_FILES="$SECURITY_FILES\n- $file"
-            fi
-          done <<< "$CHANGED_FILES"
+          if [ -n "$CHANGED_FILES" ]; then
+            while IFS= read -r file; do
+              if echo "$file" | grep -qE "$SECURITY_KEYWORDS"; then
+                SECURITY_FILES="$SECURITY_FILES\n- $file"
+                echo "Security-related file found: $file"
+              fi
+            done <<< "$CHANGED_FILES"
+          else
+            echo "No changed files found"
+          fi
           
           # Check for dependency changes
           DEPENDENCY_FILES=""
-          while IFS= read -r file; do
-            if [[ "$file" == *"package.json"* ]] || [[ "$file" == *"requirements.txt"* ]] || [[ "$file" == *"Gemfile"* ]] || [[ "$file" == *"go.mod"* ]]; then
-              DEPENDENCY_FILES="$DEPENDENCY_FILES\n- $file"
-            fi
-          done <<< "$CHANGED_FILES"
+          if [ -n "$CHANGED_FILES" ]; then
+            while IFS= read -r file; do
+              if [[ "$file" == *"package.json"* ]] || [[ "$file" == *"requirements.txt"* ]] || [[ "$file" == *"Gemfile"* ]] || [[ "$file" == *"go.mod"* ]]; then
+                DEPENDENCY_FILES="$DEPENDENCY_FILES\n- $file"
+                echo "Dependency file found: $file"
+              fi
+            done <<< "$CHANGED_FILES"
+          fi
           
           # Apply labels if security or dependency changes detected
           if [ ! -z "$SECURITY_FILES" ]; then
