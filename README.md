@@ -1,10 +1,16 @@
 # ai-common
 
-A personal repository for Claude Code global configuration backup, custom commands, and AI development utilities.
+A continuously evolving AI development toolkit featuring automated PR standards and guardrails for AI-assisted coding agents, plus Claude Code global configuration management. This dynamic repository adapts to the rapidly changing landscape of AI-assisted development, capturing lessons learned, best practices, and emerging patterns as AI coding tools mature.
 
 ## Overview
 
-This repository serves as a version-controlled backup system for Claude Code global configurations and custom commands. It demonstrates a robust approach to maintaining personal AI tooling settings across projects while enabling sharing and collaboration.
+This repository serves as a **comprehensive AI development toolkit** featuring:
+
+1. **AI-Assisted Coding Guardrails**: A complete Pull Request standards and automation system designed specifically for AI coding agents like Claude Code and GitHub Copilot
+2. **Global Configuration Management**: Version-controlled backup system for Claude Code configurations and custom commands  
+3. **Cross-Project Tooling**: Shared utilities and workflows that enhance AI-assisted development across multiple repositories
+
+The centerpiece is our **PR Standards System** - a set of automated guardrails that ensure AI-generated code changes maintain quality, security, and documentation standards while preventing common workflow failures.
 
 ## Repository Structure
 
@@ -12,17 +18,117 @@ This repository serves as a version-controlled backup system for Claude Code glo
 ai-common/
 ├── README.md                           # This documentation
 ├── CLAUDE.md                          # Project-specific Claude guidance
+├── workflow-validation-test.md        # Workflow testing documentation
 ├── Anthropic/Claude/Global/           # Global Claude configuration backup
 │   ├── CLAUDE.md                      # Global Claude guidance & protocols
+│   ├── PR-STANDARDS.md               # Complete PR standards documentation
+│   ├── CLAUDE-CODE-PR-PROMPT.md      # AI assistant PR optimization prompts
+│   ├── README-PR-STANDARDS.md        # Quick start guide for PR standards
+│   ├── DEPLOYMENT-GUIDE.md           # System deployment instructions
 │   ├── commands/                      # Custom slash commands
 │   │   └── ingest-web.md             # Web resource summarization command
 │   └── config/                        # Personal configuration files
-│       └── settings.local.json       # Claude permissions and settings
+│       ├── settings.local.json       # Claude permissions and settings
+│       └── pr-standards.json         # Machine-readable PR config
+├── .github/                           # GitHub automation & workflows
+│   ├── workflows/                     # Automated workflow definitions
+│   │   ├── pr-validation.yml         # Main PR validation workflow
+│   │   ├── pr-approved.yml           # Post-merge automation workflow
+│   │   ├── reusable-pr-validation.yml # Reusable validation components
+│   │   └── reusable-pr-approved.yml  # Reusable approval components
+│   ├── pull_request_template.md      # GitHub PR template
+│   ├── pr-automation-config.yml      # Workflow configuration
+│   └── scripts/                      # Automation scripts
+│       └── deploy-pr-standards.sh    # Deploy PR standards to other repos
 ├── arrgh.code-workspace              # Multi-project workspace configuration
 └── ingest-web-resource.md            # Original web ingestion prompt template
 ```
 
 ## Key Features
+
+### 🛡️ AI-Assisted Coding Guardrails System
+
+This repository includes a comprehensive **Pull Request Standards and Automation System** designed specifically as guardrails for AI-assisted coding agents like Claude Code, GitHub Copilot, and other AI development tools.
+
+#### **Motivation & Concept**
+As AI coding assistants become more powerful, the need for robust guardrails becomes critical. This system ensures that AI-generated code changes:
+- Follow consistent quality standards
+- Undergo proper validation and review
+- Maintain security and reliability practices
+- Are properly documented and tested
+
+#### **System Components**
+
+**📋 PR Standards Framework**
+- **Conventional Commits**: Enforced format for consistent change tracking
+- **Template Compliance**: Required sections for complete documentation  
+- **Size Guidelines**: Automated detection of overly large changes
+- **Security Scanning**: Detection of sensitive code modifications
+
+**🤖 Automated Workflows**
+- **PR Validation**: Title format, description completeness, file size checks
+- **Auto-Labeling**: Smart label creation and application based on change type
+- **Post-Merge Automation**: Branch cleanup, release notes, contributor acknowledgment
+- **Error Recovery**: Graceful handling of missing labels and edge cases
+
+**🔧 Smart Features**
+- **Auto-Label Creation**: Missing labels are created automatically with appropriate colors
+- **Event Detection Logic**: Robust handling of GitHub workflow events
+- **Template Validation**: Ensures AI-generated PRs include all required sections
+- **Graceful Fallbacks**: Workflows continue even when encountering errors
+
+#### **Files & Structure**
+```
+.github/
+├── workflows/
+│   ├── pr-validation.yml              # Main PR validation workflow
+│   ├── pr-approved.yml                # Post-merge automation
+│   ├── reusable-pr-validation.yml     # Reusable validation components  
+│   └── reusable-pr-approved.yml       # Reusable approval components
+├── pull_request_template.md           # GitHub PR template
+├── pr-automation-config.yml           # Workflow configuration
+└── scripts/deploy-pr-standards.sh     # Deployment script for other repos
+
+Anthropic/Claude/Global/
+├── PR-STANDARDS.md                    # Complete documentation
+├── CLAUDE-CODE-PR-PROMPT.md          # AI assistant optimization prompts
+├── README-PR-STANDARDS.md            # Quick start guide
+└── config/pr-standards.json          # Machine-readable configuration
+```
+
+#### **For AI Coding Agents**
+The system includes specific optimizations for AI assistants:
+- **Detailed system prompts** for consistent PR creation
+- **Template compliance checking** to ensure AI follows documentation standards
+- **Automated validation** that catches common AI coding patterns that need review
+- **Error handling** that prevents workflow failures from stopping AI development
+
+#### **Deployment to Other Repositories**
+Use the included deployment script to add these guardrails to any repository:
+```bash
+.github/scripts/deploy-pr-standards.sh owner/target-repo --customize
+```
+
+#### **Recent Improvements (v1.1.0)**
+Our latest iteration includes several critical fixes and enhancements:
+
+**🔧 Workflow Reliability**
+- ✅ **Auto-Label Creation**: Workflows now create missing labels automatically instead of failing
+- ✅ **Event Detection Logic**: Fixed shell syntax errors that caused exit code 127 failures  
+- ✅ **Error Recovery**: Enhanced graceful fallbacks for edge cases and missing dependencies
+- ✅ **Command Validation**: Resolved "command not found" errors in GitHub Actions runners
+
+**🤖 AI Assistant Optimizations**
+- ✅ **Template Compliance**: Improved validation to ensure AI-generated PRs follow standards
+- ✅ **Smart Labeling**: Labels are applied based on conventional commit types with auto-creation
+- ✅ **Workflow Continuity**: Missing labels or configuration issues no longer stop workflows
+- ✅ **Debugging Enhancement**: Better error reporting for troubleshooting workflow issues
+
+**📋 Documentation Sync**
+- ✅ **Configuration Alignment**: All config files now match actual workflow behavior
+- ✅ **Deployment Scripts**: Fixed file paths and references for accurate deployment  
+- ✅ **Version Management**: Updated to v1.1.0 with comprehensive change documentation
+- ✅ **AI Context**: Enhanced documentation specifically for AI coding assistant integration
 
 ### 🔄 Symbolic Link Backup System
 - **Global CLAUDE.md**: `~/.claude/CLAUDE.md` → `Anthropic/Claude/Global/CLAUDE.md`
@@ -71,6 +177,33 @@ SUMMARY:
 - **Personal Access Token Guidance**: Stable authentication setup
 
 ## Setup Instructions
+
+### Getting Started with AI Guardrails
+
+To deploy the PR standards system to any repository:
+
+```bash
+# Clone this repository
+git clone https://github.com/pbonneville/ai-common.git
+cd ai-common
+
+# Deploy to your target repository
+./.github/scripts/deploy-pr-standards.sh your-username/your-repo --customize
+
+# The script will:
+# 1. Create a new branch in your target repo
+# 2. Copy all PR standards files and workflows
+# 3. Allow customization of size limits and features
+# 4. Create a pull request for review
+```
+
+**What gets deployed:**
+- ✅ Automated PR validation workflows
+- ✅ Smart auto-labeling system  
+- ✅ GitHub PR templates
+- ✅ Security scanning automation
+- ✅ Post-merge cleanup and release notes
+- ✅ Complete documentation
 
 ### For Personal Use
 1. Clone this repository

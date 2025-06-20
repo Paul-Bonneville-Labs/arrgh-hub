@@ -30,13 +30,13 @@ labels:
     feat: "enhancement"
     fix: "bug"
     docs: "documentation"
-    test: "testing"
-    refactor: "refactoring"
-    style: "style"
-    build: "ci-cd"
-    ci: "ci-cd"
-    perf: "performance"
-    chore: "chore"
+    test: "testing"      # Auto-created if missing
+    refactor: "refactoring"  # Auto-created if missing
+    style: "style"       # Auto-created if missing
+    build: "ci-cd"       # Auto-created if missing
+    ci: "ci-cd"          # Auto-created if missing
+    perf: "performance"  # Auto-created if missing
+    chore: "chore"       # Auto-created if missing
   special:
     breaking_change: "breaking-change"
     security: "security"

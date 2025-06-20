@@ -182,8 +182,8 @@ declare -a STANDARD_FILES=(
     "Anthropic/Claude/Global/config/pr-standards.json"
     ".github/pull_request_template.md"
     ".github/pr-automation-config.yml"
-    ".github/workflows-reusable/pr-validation.yml"
-    ".github/workflows-reusable/pr-approved.yml"
+    ".github/workflows/reusable-pr-validation.yml"
+    ".github/workflows/reusable-pr-approved.yml"
 )
 
 declare -a WRAPPER_FILES=(
