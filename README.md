@@ -1,6 +1,16 @@
-# ai-common
+# arrgh-hub
 
 A continuously evolving AI development toolkit featuring automated PR standards and guardrails for AI-assisted coding agents, plus Claude Code global configuration management. This dynamic repository adapts to the rapidly changing landscape of AI-assisted development, capturing lessons learned, best practices, and emerging patterns as AI coding tools mature.
+
+## 📋 Project Management
+
+**[📊 ARRGH Hub Project Board](https://github.com/users/pbonneville/projects/2)** - Track development progress, issues, and roadmap for arrgh-hub repository components.
+
+This public project board provides visibility into:
+- Current development priorities
+- Issue tracking and resolution
+- Feature development progress  
+- Documentation and tooling improvements
 
 ## Overview
 
@@ -15,7 +25,7 @@ The centerpiece is our **PR Standards System** - a set of automated guardrails t
 ## Repository Structure
 
 ```
-ai-common/
+arrgh-hub/
 ├── README.md                           # This documentation
 ├── CLAUDE.md                          # Project-specific Claude guidance
 ├── workflow-validation-test.md        # Workflow testing documentation
@@ -184,8 +194,8 @@ To deploy the PR standards system to any repository:
 
 ```bash
 # Clone this repository
-git clone https://github.com/pbonneville/ai-common.git
-cd ai-common
+git clone https://github.com/pbonneville/arrgh-hub.git
+cd arrgh-hub
 
 # Deploy to your target repository
 ./.github/scripts/deploy-pr-standards.sh your-username/your-repo --customize
@@ -214,9 +224,9 @@ cd ai-common
    mv ~/.claude/settings.local.json ~/.claude/settings.local.json.backup
    
    # Create symbolic links
-   ln -s /path/to/ai-common/Anthropic/Claude/Global/CLAUDE.md ~/.claude/CLAUDE.md
-   ln -s /path/to/ai-common/Anthropic/Claude/Global/config/settings.local.json ~/.claude/settings.local.json
-   ln -s /path/to/ai-common/Anthropic/Claude/Global/commands ~/.claude/commands
+   ln -s /path/to/arrgh-hub/Anthropic/Claude/Global/CLAUDE.md ~/.claude/CLAUDE.md
+   ln -s /path/to/arrgh-hub/Anthropic/Claude/Global/config/settings.local.json ~/.claude/settings.local.json
+   ln -s /path/to/arrgh-hub/Anthropic/Claude/Global/commands ~/.claude/commands
    ```
 
 ### For Team Sharing

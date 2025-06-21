@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code when working with the ai-common repository.
+This file provides guidance to Claude Code when working with the arrgh-hub repository.
 
 ## Project Overview
 

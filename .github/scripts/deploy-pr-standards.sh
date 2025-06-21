@@ -14,7 +14,7 @@ PURPLE='\033[0;35m'
 NC='\033[0m' # No Color
 
 # Default configuration
-SOURCE_REPO="pbonneville/ai-common"
+SOURCE_REPO="pbonneville/arrgh-hub"
 BRANCH_NAME="deploy/pr-standards-$(date +%Y%m%d%H%M%S)"
 DRY_RUN=false
 FORCE=false
@@ -124,7 +124,7 @@ print_header "Deploying PR Standards System to $TARGET_REPO"
 
 # Check if we're in the right directory
 if [ ! -f "Anthropic/Claude/Global/PR-STANDARDS.md" ]; then
-    print_error "Must be run from the ai-common repository root"
+    print_error "Must be run from the arrgh-hub repository root"
     print_error "PR-STANDARDS.md not found in expected location"
     exit 1
 fi

@@ -11,7 +11,7 @@ This guide explains how to deploy and manage the PR Standards System across mult
 ### System Architecture
 
 ```
-ai-common (Central Repository)
+arrgh-hub (Central Repository)
 ├── 📋 Standards & Documentation
 ├── 🔧 Reusable Workflows
 ├── 🚀 Deployment Scripts
@@ -30,7 +30,7 @@ Target Repositories
 ### Option 1: Automated Script (Recommended)
 
 ```bash
-# From ai-common repository root
+# From arrgh-hub repository root
 ./.github/scripts/deploy-pr-standards.sh pbonneville/target-repo
 
 # With customization prompts
@@ -43,7 +43,7 @@ Target Repositories
 ### Option 2: Manual Deployment
 
 1. **Clone target repository**
-2. **Copy core files** from ai-common
+2. **Copy core files** from arrgh-hub
 3. **Customize configuration**
 4. **Create and merge PR**
 
@@ -51,10 +51,10 @@ Target Repositories
 
 ## 📁 File Structure
 
-### Central Repository (ai-common)
+### Central Repository (arrgh-hub)
 
 ```
-ai-common/
+arrgh-hub/
 ├── Anthropic/Claude/Global/
 │   ├── PR-STANDARDS.md              # Complete documentation
 │   ├── CLAUDE-CODE-PR-PROMPT.md     # AI assistant integration
@@ -128,7 +128,7 @@ with:
 
 ### Global Configuration
 
-Centrally managed in `ai-common`:
+Centrally managed in `arrgh-hub`:
 
 #### Conventional Commit Types
 ```json
@@ -191,7 +191,7 @@ done
 
 1. **Modify reusable workflows** in `.github/workflows/` (prefixed with `reusable-`)
 2. **Update documentation** in `Anthropic/Claude/Global/`
-3. **Test changes** in ai-common first
+3. **Test changes** in arrgh-hub first
 4. **Deploy updates** to target repositories
 
 ### Version Management
@@ -203,7 +203,7 @@ git tag -a pr-standards-v1.2.0 -m "PR Standards System v1.2.0"
 git push origin pr-standards-v1.2.0
 
 # Use specific versions in target repos
-uses: pbonneville/ai-common/.github/workflows/reusable-pr-validation.yml@pr-standards-v1.2.0
+uses: pbonneville/arrgh-hub/.github/workflows/reusable-pr-validation.yml@pr-standards-v1.2.0
 ```
 
 #### Update Propagation
@@ -382,7 +382,7 @@ jobs:
 
 ## 🤝 Contributing
 
-1. **Test changes** in ai-common first
+1. **Test changes** in arrgh-hub first
 2. **Update documentation** as needed
 3. **Follow PR standards** (dogfooding!)
 4. **Test deployment script** with `--dry-run`
@@ -390,4 +390,4 @@ jobs:
 
 ---
 
-*This deployment guide is part of the centralized PR Standards System. For questions or issues, create an issue in the ai-common repository.* 
+*This deployment guide is part of the centralized PR Standards System. For questions or issues, create an issue in the arrgh-hub repository.* 
