@@ -1,3 +1,7 @@
+---
+description: Create a new git worktree in a sibling directory
+---
+
 Create a new git worktree in a sibling directory with the name derived from: $ARGUMENTS
 
 1. **Parse Arguments**

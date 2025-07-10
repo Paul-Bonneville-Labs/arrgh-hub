@@ -71,22 +71,82 @@ ls -la ~/.claude/
 ## Custom Commands Available
 
 ### `/branch-status`
-Displays current git branch status and associated PR information.
+Check git branch status, uncommitted changes, and associated PRs
+
+Displays formatted output showing:
+- Current branch information
+- Working directory and commit status  
+- Associated pull request details
 
 ### `/ingest-web`
-Fetches and summarizes web resources into standardized markdown format.
-- Usage: `/ingest-web <url> [optional-filename]`
-- Creates formatted summary with RESOURCE, UPDATE HISTORY, and SUMMARY sections
-- Generates descriptive filenames automatically
+Fetch and summarize web resources into markdown files
+
+Takes a URL as argument and creates a comprehensive summary:
+- Fetches content using WebFetch tool
+- Generates descriptive filename based on content
+- Creates structured markdown with metadata
+- Includes update history tracking
+- Handles error cases for invalid URLs
+
+Usage: `/ingest-web https://example.com/resource [optional-filename]`
+
+### `/merge-pr`
+Merge the current PR, delete local branch, and return to main
+
+Complete workflow automation:
+- Finds and merges open PR for current branch
+- Switches back to main branch
+- Pulls latest changes
+- Deletes the merged local branch
+
+**Requirements:**
+- Must have an open PR for the current branch
+- Cannot be run from main branch
+- Requires GitHub CLI (gh) to be authenticated
 
 ### `/new-work`
-Sets up a new work session or task.
+Clean up current work and start a new branch for new tasks
+
+Two-step process:
+1. **Cleanup**: Check current branch for uncommitted changes, commit if appropriate, create PR if needed
+2. **New Branch**: Prompt user for work description and create appropriately named branch
 
 ### `/ship-it`
-Handles deployment workflow processes.
+Commit uncommitted changes and create PR if needed
+
+Workflow steps:
+- If on main branch, creates new branch first (never commits to main)
+- Commits any uncommitted changes
+- Creates PR for the work if one doesn't exist for current branch
+- Provides status updates for each step
+
+### `/update-docs`
+Update README.md and CLAUDE.md with current repository content and functionality
+
+Comprehensive documentation update:
+- Scans repository structure for current state
+- Extracts command descriptions from YAML frontmatter
+- Updates directory tree in README.md
+- Updates command listings in both files
+- Maintains clean section boundaries without duplication
 
 ### `/worktree`
-Manages git worktree operations.
+Create a new git worktree in a sibling directory
+
+Advanced git workflow tool:
+- Creates new branch with `feature/{name}` pattern
+- Sets up worktree in `{project}-{name}` directory structure
+- Switches to new worktree automatically
+- Handles validation and error cases
+
+**Usage:** `/worktree <name>`
+**Example:** From `/Developer/arrgh-fastapi`, `/worktree new-feature` creates `/Developer/arrgh-fastapi-new-feature`
+
+**Error Handling:**
+- Missing argument: Display usage message
+- Invalid characters: Only alphanumeric and hyphens allowed
+- Directory/branch conflicts: Graceful handling
+- Git operation failures: Clear error messages
 
 ## Important Notes
 

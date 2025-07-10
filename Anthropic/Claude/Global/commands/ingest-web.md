@@ -1,3 +1,7 @@
+---
+description: Fetch and summarize web resources into markdown files
+---
+
 Fetch and summarize the web resource from: $ARGUMENTS
 
 Create a markdown file with a descriptive filename based on the content. Follow these steps:
