@@ -1,28 +1,19 @@
 {
 	"folders": [
 		{
-			"name": "arrgh-hub",
 			"path": "."
 		},
 		{
-			"name": "arrgh-ios",
 			"path": "../arrgh-ios"
 		},
 		{
-			"name": "arrgh-fastapi",
 			"path": "../arrgh-fastapi"
 		},
 		{
-			"name": "arrgh-n8n",
 			"path": "../arrgh-n8n"
 		},
 		{
-			"name": "arrgh-excalidraw",
 			"path": "../arrgh-excalidraw"
-		},
-		{
-			"name": "arrgh-neo4j",
-			"path": "../arrgh-neo4j"
 		}
 	],
 	"settings": {}
