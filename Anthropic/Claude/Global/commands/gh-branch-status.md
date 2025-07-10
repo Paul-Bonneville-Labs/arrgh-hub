@@ -1,10 +1,10 @@
 ---
 description: Check git branch status, uncommitted changes, and associated PRs
-allowed-tools: Bash(~/.claude/commands/scripts/branch-status.sh)
+allowed-tools: Bash(~/.claude/commands/scripts/gh-branch-status.sh)
 ---
 
 ## Your task
-!`~/.claude/commands/scripts/branch-status.sh`
+!`~/.claude/commands/scripts/gh-branch-status.sh`
 
 Format your output as follows:
 ```

@@ -70,23 +70,97 @@ ls -la ~/.claude/
 
 ## Custom Commands Available
 
-### `/branch-status`
-Displays current git branch status and associated PR information.
+### `/gh-branch-status`
+Check git branch status, uncommitted changes, and associated PRs
+
+Displays formatted output showing:
+- Current branch information
+- Working directory and commit status  
+- Associated pull request details
+
+### `/gh-new-work`
+Clean up current work and start a new branch for new tasks
+
+Two-step process:
+1. **Cleanup**: Check current branch for uncommitted changes, commit if appropriate, create PR if needed
+2. **New Branch**: Prompt user for work description and create appropriately named branch
+
+### `/gh-pr-merge`
+Merge the current PR, delete local branch, and return to main
+
+Complete workflow automation:
+- Finds and merges open PR for current branch
+- Switches back to main branch
+- Pulls latest changes
+- Deletes the merged local branch
+
+**Requirements:**
+- Must have an open PR for the current branch
+- Cannot be run from main branch
+- Requires GitHub CLI (gh) to be authenticated
+
+### `/gh-pr-review`
+Check PR status, list comments, and create plan to address feedback
+
+Comprehensive PR analysis workflow:
+- Identifies current branch's PR and displays basic information
+- Fetches and organizes review comments and general comments by author, type, and location
+- Categorizes feedback into: code changes, questions, suggestions, blockers, and praise
+- Creates detailed action plan with specific tasks, file locations, and complexity estimates
+- Presents organized summary and asks for user approval before implementation
+- Handles error cases: no PR found, API issues, empty comments, parsing errors
+
+**Usage:** `/gh-pr-review`
+**Requirements:** GitHub CLI (gh) authentication and current branch with open PR
+
+### `/gh-ship-it`
+Commit uncommitted changes and create PR if needed
+
+Workflow steps:
+- If on main branch, creates new branch first (never commits to main)
+- Commits any uncommitted changes
+- Creates PR for the work if one doesn't exist for current branch
+- Provides status updates for each step
+
+### `/gh-worktree`
+Create a new git worktree in a sibling directory
+
+Advanced git workflow tool:
+- Creates new branch with `feature/{name}` pattern
+- Sets up worktree in `{project}-{name}` directory structure
+- Switches to new worktree automatically
+- Handles validation and error cases
+
+**Usage:** `/gh-worktree <name>`
+**Example:** From `/Developer/arrgh-fastapi`, `/gh-worktree new-feature` creates `/Developer/arrgh-fastapi-new-feature`
+
+**Error Handling:**
+- Missing argument: Display usage message
+- Invalid characters: Only alphanumeric and hyphens allowed
+- Directory/branch conflicts: Graceful handling
+- Git operation failures: Clear error messages
 
 ### `/ingest-web`
-Fetches and summarizes web resources into standardized markdown format.
-- Usage: `/ingest-web <url> [optional-filename]`
-- Creates formatted summary with RESOURCE, UPDATE HISTORY, and SUMMARY sections
-- Generates descriptive filenames automatically
+Fetch and summarize web resources into markdown files
 
-### `/new-work`
-Sets up a new work session or task.
+Takes a URL as argument and creates a comprehensive summary:
+- Fetches content using WebFetch tool
+- Generates descriptive filename based on content
+- Creates structured markdown with metadata
+- Includes update history tracking
+- Handles error cases for invalid URLs
 
-### `/ship-it`
-Handles deployment workflow processes.
+**Usage:** `/ingest-web https://example.com/resource [optional-filename]`
 
-### `/worktree`
-Manages git worktree operations.
+### `/update-docs`
+Update README.md and CLAUDE.md with current repository content and functionality
+
+Comprehensive documentation update:
+- Scans repository structure for current state
+- Extracts command descriptions from YAML frontmatter
+- Updates directory tree in README.md
+- Updates command listings in both files
+- Maintains clean section boundaries without duplication
 
 ## Important Notes
 

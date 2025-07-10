@@ -12,19 +12,25 @@ Currently focused on Claude Code configurations and utilities, but will expand t
 arrgh-hub/
 ├── README.md                     # This documentation
 ├── CLAUDE.md                     # Project-specific Claude guidance
-├── Anthropic/Claude/Global/      # Global Claude configuration backup
-│   ├── CLAUDE.md                 # Global Claude guidance & protocols
-│   ├── commands/                 # Custom slash commands
-│   │   ├── branch-status.md      # Git branch status command
-│   │   ├── ingest-web.md         # Web resource summarization
-│   │   ├── new-work.md          # New work setup command
-│   │   ├── ship-it.md           # Deployment command
-│   │   ├── worktree.md          # Git worktree management
-│   │   └── scripts/             # Shell scripts for commands
-│   └── config/                   # Personal configuration files
-│       ├── settings.local.json  # Claude permissions and settings
-│       └── pr-standards.json    # Configuration backup
-└── arrgh.code-workspace         # Multi-project workspace configuration
+├── arrgh.code-workspace          # Multi-project workspace configuration
+└── Anthropic/Claude/Global/      # Global Claude configuration backup
+    ├── CLAUDE.md                 # Global Claude guidance & protocols
+    ├── commands/                 # Custom slash commands
+    │   ├── gh-branch-status.md
+    │   ├── gh-new-work.md
+    │   ├── gh-pr-merge.md
+    │   ├── gh-pr-review.md
+    │   ├── gh-ship-it.md
+    │   ├── gh-worktree.md
+    │   ├── ingest-web.md
+    │   ├── update-docs.md
+    │   └── scripts/              # Shell scripts for commands
+    │       ├── gh-branch-status.sh
+    │       ├── gh-pr-merge.sh
+    │       └── gh-worktree.sh
+    └── config/                   # Personal configuration files
+        ├── pr-standards.json     # Configuration backup
+        └── settings.local.json   # Claude permissions and settings
 ```
 
 ## Key Features
@@ -36,12 +42,18 @@ Global Claude directories link to repository files:
 - `~/.claude/commands/` → `Anthropic/Claude/Global/commands/`
 
 ### 🛠️ Custom Commands
-- **`/branch-status`**: Git branch status checking
-- **`/ingest-web`**: Web resource summarization
-- **`/new-work`**: New work session setup
-- **`/ship-it`**: Deployment workflow
-- **`/worktree`**: Git worktree management
 
+This repository provides custom [Claude Code slash commands](https://docs.anthropic.com/en/docs/claude-code/slash-commands) that extend Claude's capabilities with project-specific workflows. Slash commands are reusable automation scripts that can be triggered with `/command-name` syntax during conversations with Claude Code.
+
+**Available Commands:**
+- **`/gh-branch-status`**: Check git branch status, uncommitted changes, and associated PRs
+- **`/gh-new-work`**: Clean up current work and start a new branch for new tasks
+- **`/gh-pr-merge`**: Merge the current PR, delete local branch, and return to main
+- **`/gh-pr-review`**: Check PR status, list comments, and create plan to address feedback
+- **`/gh-ship-it`**: Commit uncommitted changes and create PR if needed
+- **`/gh-worktree`**: Create a new git worktree in a sibling directory
+- **`/ingest-web`**: Fetch and summarize web resources into markdown files
+- **`/update-docs`**: Update README.md and CLAUDE.md with current repository content and functionality
 ## Setup
 
 1. Clone this repository
