@@ -1,10 +1,10 @@
 ---
 description: Merge the current PR, delete local branch, and return to main
-allowed-tools: Bash(~/.claude/commands/scripts/gh-pr-merge.sh)
+allowed-tools: Bash(Anthropic/Claude/Global/commands/scripts/gh-pr-merge.sh)
 ---
 
 ## Your task
-!`~/.claude/commands/scripts/gh-pr-merge.sh`
+!`Anthropic/Claude/Global/commands/scripts/gh-pr-merge.sh`
 
 This command will:
 1. Find and merge the open PR for the current branch
