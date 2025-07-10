@@ -6,7 +6,7 @@ Create a new git worktree in a sibling directory with the name derived from: $AR
 
 1. **Parse Arguments**
    - Extract the worktree name from $ARGUMENTS (required first argument)
-   - If no argument provided, show usage: "Usage: /worktree <name>"
+   - If no argument provided, show usage: "Usage: /gh-worktree <name>"
    - Validate the name contains only alphanumeric characters and hyphens
 
 2. **Determine Current Project Structure**
@@ -22,7 +22,7 @@ Create a new git worktree in a sibling directory with the name derived from: $AR
 
 4. **Create Branch and Worktree**
    - Option A: Use the helper script (recommended for consistency):
-     `~/.claude/scripts/create-worktree.sh {worktree-name}`
+     `~/.claude/commands/scripts/gh-worktree.sh {worktree-name}`
    - Option B: Manual creation:
      - Create a new branch named `feature/{worktree-name}` from current branch
      - Create the git worktree in the target directory using:
@@ -51,7 +51,7 @@ Create a new git worktree in a sibling directory with the name derived from: $AR
 
 ```bash
 # Current directory: /Users/paulbonneville/Developer/arrgh-fastapi
-/worktree new-feature
+/gh-worktree new-feature
 
 # Creates:
 # - New branch: feature/new-feature

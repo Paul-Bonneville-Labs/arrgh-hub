@@ -70,7 +70,7 @@ ls -la ~/.claude/
 
 ## Custom Commands Available
 
-### `/branch-status`
+### `/gh-branch-status`
 Check git branch status, uncommitted changes, and associated PRs
 
 Displays formatted output showing:
@@ -104,14 +104,14 @@ Complete workflow automation:
 - Cannot be run from main branch
 - Requires GitHub CLI (gh) to be authenticated
 
-### `/new-work`
+### `/gh-new-work`
 Clean up current work and start a new branch for new tasks
 
 Two-step process:
 1. **Cleanup**: Check current branch for uncommitted changes, commit if appropriate, create PR if needed
 2. **New Branch**: Prompt user for work description and create appropriately named branch
 
-### `/ship-it`
+### `/gh-ship-it`
 Commit uncommitted changes and create PR if needed
 
 Workflow steps:
@@ -130,7 +130,7 @@ Comprehensive documentation update:
 - Updates command listings in both files
 - Maintains clean section boundaries without duplication
 
-### `/worktree`
+### `/gh-worktree`
 Create a new git worktree in a sibling directory
 
 Advanced git workflow tool:
@@ -139,8 +139,8 @@ Advanced git workflow tool:
 - Switches to new worktree automatically
 - Handles validation and error cases
 
-**Usage:** `/worktree <name>`
-**Example:** From `/Developer/arrgh-fastapi`, `/worktree new-feature` creates `/Developer/arrgh-fastapi-new-feature`
+**Usage:** `/gh-worktree <name>`
+**Example:** From `/Developer/arrgh-fastapi`, `/gh-worktree new-feature` creates `/Developer/arrgh-fastapi-new-feature`
 
 **Error Handling:**
 - Missing argument: Display usage message

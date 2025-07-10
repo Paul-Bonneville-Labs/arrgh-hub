@@ -42,13 +42,13 @@ Global Claude directories link to repository files:
 - `~/.claude/commands/` → `Anthropic/Claude/Global/commands/`
 
 ### 🛠️ Custom Commands
-- **`/branch-status`**: Check git branch status, uncommitted changes, and associated PRs
+- **`/gh-branch-status`**: Check git branch status, uncommitted changes, and associated PRs
 - **`/ingest-web`**: Fetch and summarize web resources into markdown files
 - **`/merge-pr`**: Merge the current PR, delete local branch, and return to main
-- **`/new-work`**: Clean up current work and start a new branch for new tasks
-- **`/ship-it`**: Commit uncommitted changes and create PR if needed
+- **`/gh-new-work`**: Clean up current work and start a new branch for new tasks
+- **`/gh-ship-it`**: Commit uncommitted changes and create PR if needed
 - **`/update-docs`**: Update README.md and CLAUDE.md with current repository content and functionality
-- **`/worktree`**: Create a new git worktree in a sibling directory
+- **`/gh-worktree`**: Create a new git worktree in a sibling directory
 ## Setup
 
 1. Clone this repository
