@@ -1,1 +1,4 @@
 .DS_Store
+
+# Sensitive Claude configuration file
+Anthropic/Claude/Global/config/.claude.json
