@@ -16,18 +16,18 @@ arrgh-hub/
 └── Anthropic/Claude/Global/      # Global Claude configuration backup
     ├── CLAUDE.md                 # Global Claude guidance & protocols
     ├── commands/                 # Custom slash commands
-    │   ├── branch-status.md
+    │   ├── gh-branch-status.md
+    │   ├── gh-new-work.md
+    │   ├── gh-pr-merge.md
+    │   ├── gh-pr-review.md
+    │   ├── gh-ship-it.md
+    │   ├── gh-worktree.md
     │   ├── ingest-web.md
-    │   ├── merge-pr.md
-    │   ├── new-work.md
-    │   ├── ship-it.md
     │   ├── update-docs.md
-    │   ├── worktree.md
     │   └── scripts/              # Shell scripts for commands
-    │       ├── branch-status.sh
-    │       ├── create-worktree.sh
-    │       ├── merge-pr.sh
-    │       └── update-docs-legacy.sh
+    │       ├── gh-branch-status.sh
+    │       ├── gh-pr-merge.sh
+    │       └── gh-worktree.sh
     └── config/                   # Personal configuration files
         ├── pr-standards.json     # Configuration backup
         └── settings.local.json   # Claude permissions and settings
@@ -42,13 +42,18 @@ Global Claude directories link to repository files:
 - `~/.claude/commands/` → `Anthropic/Claude/Global/commands/`
 
 ### 🛠️ Custom Commands
+
+This repository provides custom [Claude Code slash commands](https://docs.anthropic.com/en/docs/claude-code/slash-commands) that extend Claude's capabilities with project-specific workflows. Slash commands are reusable automation scripts that can be triggered with `/command-name` syntax during conversations with Claude Code.
+
+**Available Commands:**
 - **`/gh-branch-status`**: Check git branch status, uncommitted changes, and associated PRs
-- **`/ingest-web`**: Fetch and summarize web resources into markdown files
-- **`/merge-pr`**: Merge the current PR, delete local branch, and return to main
 - **`/gh-new-work`**: Clean up current work and start a new branch for new tasks
+- **`/gh-pr-merge`**: Merge the current PR, delete local branch, and return to main
+- **`/gh-pr-review`**: Check PR status, list comments, and create plan to address feedback
 - **`/gh-ship-it`**: Commit uncommitted changes and create PR if needed
-- **`/update-docs`**: Update README.md and CLAUDE.md with current repository content and functionality
 - **`/gh-worktree`**: Create a new git worktree in a sibling directory
+- **`/ingest-web`**: Fetch and summarize web resources into markdown files
+- **`/update-docs`**: Update README.md and CLAUDE.md with current repository content and functionality
 ## Setup
 
 1. Clone this repository

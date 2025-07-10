@@ -78,19 +78,14 @@ Displays formatted output showing:
 - Working directory and commit status  
 - Associated pull request details
 
-### `/ingest-web`
-Fetch and summarize web resources into markdown files
+### `/gh-new-work`
+Clean up current work and start a new branch for new tasks
 
-Takes a URL as argument and creates a comprehensive summary:
-- Fetches content using WebFetch tool
-- Generates descriptive filename based on content
-- Creates structured markdown with metadata
-- Includes update history tracking
-- Handles error cases for invalid URLs
+Two-step process:
+1. **Cleanup**: Check current branch for uncommitted changes, commit if appropriate, create PR if needed
+2. **New Branch**: Prompt user for work description and create appropriately named branch
 
-Usage: `/ingest-web https://example.com/resource [optional-filename]`
-
-### `/merge-pr`
+### `/gh-pr-merge`
 Merge the current PR, delete local branch, and return to main
 
 Complete workflow automation:
@@ -104,12 +99,19 @@ Complete workflow automation:
 - Cannot be run from main branch
 - Requires GitHub CLI (gh) to be authenticated
 
-### `/gh-new-work`
-Clean up current work and start a new branch for new tasks
+### `/gh-pr-review`
+Check PR status, list comments, and create plan to address feedback
 
-Two-step process:
-1. **Cleanup**: Check current branch for uncommitted changes, commit if appropriate, create PR if needed
-2. **New Branch**: Prompt user for work description and create appropriately named branch
+Comprehensive PR analysis workflow:
+- Identifies current branch's PR and displays basic information
+- Fetches and organizes review comments and general comments by author, type, and location
+- Categorizes feedback into: code changes, questions, suggestions, blockers, and praise
+- Creates detailed action plan with specific tasks, file locations, and complexity estimates
+- Presents organized summary and asks for user approval before implementation
+- Handles error cases: no PR found, API issues, empty comments, parsing errors
+
+**Usage:** `/gh-pr-review`
+**Requirements:** GitHub CLI (gh) authentication and current branch with open PR
 
 ### `/gh-ship-it`
 Commit uncommitted changes and create PR if needed
@@ -119,16 +121,6 @@ Workflow steps:
 - Commits any uncommitted changes
 - Creates PR for the work if one doesn't exist for current branch
 - Provides status updates for each step
-
-### `/update-docs`
-Update README.md and CLAUDE.md with current repository content and functionality
-
-Comprehensive documentation update:
-- Scans repository structure for current state
-- Extracts command descriptions from YAML frontmatter
-- Updates directory tree in README.md
-- Updates command listings in both files
-- Maintains clean section boundaries without duplication
 
 ### `/gh-worktree`
 Create a new git worktree in a sibling directory
@@ -147,6 +139,28 @@ Advanced git workflow tool:
 - Invalid characters: Only alphanumeric and hyphens allowed
 - Directory/branch conflicts: Graceful handling
 - Git operation failures: Clear error messages
+
+### `/ingest-web`
+Fetch and summarize web resources into markdown files
+
+Takes a URL as argument and creates a comprehensive summary:
+- Fetches content using WebFetch tool
+- Generates descriptive filename based on content
+- Creates structured markdown with metadata
+- Includes update history tracking
+- Handles error cases for invalid URLs
+
+**Usage:** `/ingest-web https://example.com/resource [optional-filename]`
+
+### `/update-docs`
+Update README.md and CLAUDE.md with current repository content and functionality
+
+Comprehensive documentation update:
+- Scans repository structure for current state
+- Extracts command descriptions from YAML frontmatter
+- Updates directory tree in README.md
+- Updates command listings in both files
+- Maintains clean section boundaries without duplication
 
 ## Important Notes
 
