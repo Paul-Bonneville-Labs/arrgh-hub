@@ -40,6 +40,7 @@ Global Claude directories link to repository files:
 - `~/.claude/CLAUDE.md` → `Anthropic/Claude/Global/CLAUDE.md`
 - `~/.claude/settings.local.json` → `Anthropic/Claude/Global/config/settings.local.json`
 - `~/.claude/commands/` → `Anthropic/Claude/Global/commands/`
+- `~/.claude/.claude.json` → `Anthropic/Claude/Global/config/.claude.json` *(gitignored - contains sensitive data)*
 
 ### 🛠️ Custom Commands
 
@@ -62,12 +63,16 @@ This repository provides custom [Claude Code slash commands](https://docs.anthro
    # Backup existing files
    mv ~/.claude/CLAUDE.md ~/.claude/CLAUDE.md.backup
    mv ~/.claude/settings.local.json ~/.claude/settings.local.json.backup
+   mv ~/.claude/.claude.json ~/.claude/.claude.json.backup
    
    # Create symbolic links
    ln -s /path/to/arrgh-hub/Anthropic/Claude/Global/CLAUDE.md ~/.claude/CLAUDE.md
    ln -s /path/to/arrgh-hub/Anthropic/Claude/Global/config/settings.local.json ~/.claude/settings.local.json
    ln -s /path/to/arrgh-hub/Anthropic/Claude/Global/commands ~/.claude/commands
+   ln -s /path/to/arrgh-hub/Anthropic/Claude/Global/config/.claude.json ~/.claude/.claude.json
    ```
+
+3. **Security Note**: The `.claude.json` file contains sensitive information (API keys, usage history, personal data) and is intentionally gitignored. While it's part of the symlink workflow for personal backup, it should never be committed to the repository.
 
 ## Related Projects
 
