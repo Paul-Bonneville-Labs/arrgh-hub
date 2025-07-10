@@ -4,7 +4,9 @@ This file provides guidance to Claude Code when working with the arrgh-hub repos
 
 ## Project Overview
 
-This repository serves as a **Claude Code global configuration backup and utilities** system. It contains:
+This repository serves as a shared hub for common tools, configurations, and utilities used across all "arrgh-" projects for AI experimentation and learning. Part of the Paul Bonneville's Lab AI exploration ecosystem, it will continue to evolve as new patterns and tools emerge.
+
+Currently focused on Claude Code configurations and utilities, including:
 - Personal Claude Code settings and configurations
 - Custom slash commands for reuse across projects
 - Best practices and protocols for AI-assisted development
@@ -68,11 +70,23 @@ ls -la ~/.claude/
 
 ## Custom Commands Available
 
+### `/branch-status`
+Displays current git branch status and associated PR information.
+
 ### `/ingest-web`
 Fetches and summarizes web resources into standardized markdown format.
 - Usage: `/ingest-web <url> [optional-filename]`
 - Creates formatted summary with RESOURCE, UPDATE HISTORY, and SUMMARY sections
 - Generates descriptive filenames automatically
+
+### `/new-work`
+Sets up a new work session or task.
+
+### `/ship-it`
+Handles deployment workflow processes.
+
+### `/worktree`
+Manages git worktree operations.
 
 ## Important Notes
 
