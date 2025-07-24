@@ -8,7 +8,7 @@ Scan the repository and update both README.md and CLAUDE.md with current, accura
 
 ### Steps to follow:
 
-1. **Scan for custom commands**: Look in `Anthropic/Claude/Global/commands/` for all `.md` files to get the current list of available commands.
+1. **Scan for custom commands**: Look in `Anthropic/Claude Code/Global/commands/` for all `.md` files to get the current list of available commands.
 
 2. **Extract command descriptions**: For each command file, read the description from:
    - YAML frontmatter `description:` field (primary source)
