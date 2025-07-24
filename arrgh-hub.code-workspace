@@ -4,22 +4,19 @@
 			"path": "."
 		},
 		{
-			"path": "../arrgh-ios"
+			"path": "../arrgh-excalidraw"
 		},
 		{
 			"path": "../arrgh-fastapi"
 		},
 		{
+			"path": "../arrgh-ios"
+		},
+		{
 			"path": "../arrgh-n8n"
 		},
 		{
-			"path": "../arrgh-excalidraw"
-		},
-		{
 			"path": "../arrgh-neo4j"
-		},
-		{
-			"path": "../arrgh-collect"
 		}
 	],
 	"settings": {}

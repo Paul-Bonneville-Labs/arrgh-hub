@@ -15,21 +15,29 @@ Currently focused on Claude Code configurations and utilities, including:
 ## Project Architecture
 
 ### Configuration Backup System
-This repository implements a symbolic link backup strategy:
+This repository implements a symbolic link backup strategy for both Claude Code and Claude Desktop:
 
+**Claude Code:**
 ```
-~/.claude/CLAUDE.md → Anthropic/Claude/Global/CLAUDE.md
-~/.claude/settings.local.json → Anthropic/Claude/Global/config/settings.local.json  
-~/.claude/commands/ → Anthropic/Claude/Global/commands/
+~/.claude/CLAUDE.md → Anthropic/Claude Code/Global/CLAUDE.md
+~/.claude/settings.local.json → Anthropic/Claude Code/Global/config/settings.local.json  
+~/.claude/commands/ → Anthropic/Claude Code/Global/commands/
+```
+
+**Claude Desktop:**
+```
+~/Library/Application Support/Claude/claude_desktop_config.json → Anthropic/Claude Desktop/config/claude_desktop_config.json
 ```
 
 **Key Principle**: The repository files are the **source of truth**, with global Claude directories linking back to them.
 
 ### Directory Structure
-- `Anthropic/Claude/Global/` - Contains all backed-up global Claude configurations
-- `Anthropic/Claude/Global/CLAUDE.md` - Global guidance (branch protocols, planning exports, GitHub CLI)
-- `Anthropic/Claude/Global/commands/` - Custom slash commands available globally
-- `Anthropic/Claude/Global/config/` - Personal settings and permissions
+- `Anthropic/Claude Code/Global/` - Contains all backed-up global Claude Code configurations
+  - `Anthropic/Claude Code/Global/CLAUDE.md` - Global guidance (branch protocols, planning exports, GitHub CLI)
+  - `Anthropic/Claude Code/Global/commands/` - Custom slash commands available globally
+  - `Anthropic/Claude Code/Global/config/` - Personal settings and permissions
+- `Anthropic/Claude Desktop/` - Contains backed-up Claude Desktop configurations
+  - `Anthropic/Claude Desktop/config/` - MCP server configurations and settings
 
 ## Development Commands
 
@@ -37,20 +45,26 @@ This is a configuration repository with no build/test commands. Common operation
 
 ### Working with Configurations
 ```bash
-# Edit global Claude guidance
-edit Anthropic/Claude/Global/CLAUDE.md
+# Edit global Claude Code guidance
+edit "Anthropic/Claude Code/Global/CLAUDE.md"
 
 # Add new custom command  
-touch Anthropic/Claude/Global/commands/new-command.md
+touch "Anthropic/Claude Code/Global/commands/new-command.md"
 
-# Update permissions
-edit Anthropic/Claude/Global/config/settings.local.json
+# Update Claude Code permissions
+edit "Anthropic/Claude Code/Global/config/settings.local.json"
+
+# Edit Claude Desktop MCP server configuration
+edit "Anthropic/Claude Desktop/config/claude_desktop_config.json"
 ```
 
 ### Symbolic Link Management
 ```bash
-# Verify links are working
+# Verify Claude Code links are working
 ls -la ~/.claude/
+
+# Verify Claude Desktop link is working
+ls -la "$HOME/Library/Application Support/Claude/claude_desktop_config.json"
 
 # Recreate links if needed (see README.md setup)
 ```
@@ -58,15 +72,18 @@ ls -la ~/.claude/
 ## File Handling Guidance
 
 ### When Editing Configuration Files
-- **Global Guidance**: Edit `Anthropic/Claude/Global/CLAUDE.md` for cross-project protocols
+- **Global Guidance**: Edit `Anthropic/Claude Code/Global/CLAUDE.md` for cross-project protocols
 - **Project Guidance**: Edit this file (`CLAUDE.md`) for project-specific guidance
-- **Custom Commands**: Add to `Anthropic/Claude/Global/commands/` for reusable slash commands
+- **Custom Commands**: Add to `Anthropic/Claude Code/Global/commands/` for reusable slash commands
 
 ### Version Control Considerations
-- All files in `Anthropic/Claude/Global/` should be committed
+- All files in `Anthropic/Claude Code/Global/` should be committed
+- Directory structure in `Anthropic/Claude Desktop/` should be committed  
 - These represent personal AI tooling evolution
-- Changes automatically sync to global Claude via symbolic links
-- Sensitive data is already filtered by `.gitignore`
+- Changes automatically sync to global Claude applications via symbolic links
+- Sensitive configuration files are filtered by `.gitignore`:
+  - `Anthropic/Claude Code/Global/config/.claude.json` (contains auth tokens)
+  - `Anthropic/Claude Desktop/config/claude_desktop_config.json` (contains API keys and credentials)
 
 ## Custom Commands Available
 

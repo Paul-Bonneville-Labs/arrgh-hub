@@ -4,7 +4,7 @@ A shared repository for common tools, configurations, and utilities used across 
 
 ## Overview
 
-Currently focused on Claude Code configurations and utilities, but will expand to include other common tools and patterns as the AI development workflow evolves.
+Currently focused on Claude Code and Claude Desktop configurations and utilities, but will expand to include other common tools and patterns as the AI development workflow evolves.
 
 ## Repository Structure
 
@@ -13,34 +13,42 @@ arrgh-hub/
 ├── README.md                     # This documentation
 ├── CLAUDE.md                     # Project-specific Claude guidance
 ├── arrgh.code-workspace          # Multi-project workspace configuration
-└── Anthropic/Claude/Global/      # Global Claude configuration backup
-    ├── CLAUDE.md                 # Global Claude guidance & protocols
-    ├── commands/                 # Custom slash commands
-    │   ├── gh-branch-status.md
-    │   ├── gh-new-work.md
-    │   ├── gh-pr-merge.md
-    │   ├── gh-pr-review.md
-    │   ├── gh-ship-it.md
-    │   ├── gh-worktree.md
-    │   ├── ingest-web.md
-    │   ├── update-docs.md
-    │   └── scripts/              # Shell scripts for commands
-    │       ├── gh-branch-status.sh
-    │       ├── gh-pr-merge.sh
-    │       └── gh-worktree.sh
-    └── config/                   # Personal configuration files
-        ├── pr-standards.json     # Configuration backup
-        └── settings.local.json   # Claude permissions and settings
+├── Anthropic/Claude Code/Global/ # Global Claude Code configuration backup
+│   ├── CLAUDE.md                 # Global Claude guidance & protocols
+│   ├── commands/                 # Custom slash commands
+│   │   ├── gh-branch-status.md
+│   │   ├── gh-new-work.md
+│   │   ├── gh-pr-merge.md
+│   │   ├── gh-pr-review.md
+│   │   ├── gh-ship-it.md
+│   │   ├── gh-worktree.md
+│   │   ├── ingest-web.md
+│   │   ├── update-docs.md
+│   │   └── scripts/              # Shell scripts for commands
+│   │       ├── gh-branch-status.sh
+│   │       ├── gh-pr-merge.sh
+│   │       └── gh-worktree.sh
+│   └── config/                   # Personal configuration files
+│       ├── pr-standards.json     # Configuration backup
+│       └── settings.local.json   # Claude permissions and settings
+└── Anthropic/Claude Desktop/     # Claude Desktop configuration backup
+    └── config/                   # MCP server configurations
+        └── claude_desktop_config.json  # Main Claude Desktop config (gitignored)
 ```
 
 ## Key Features
 
 ### 🔄 Symbolic Link Backup System
 Global Claude directories link to repository files:
-- `~/.claude/CLAUDE.md` → `Anthropic/Claude/Global/CLAUDE.md`
-- `~/.claude/settings.local.json` → `Anthropic/Claude/Global/config/settings.local.json`
-- `~/.claude/commands/` → `Anthropic/Claude/Global/commands/`
-- `~/.claude/.claude.json` → `Anthropic/Claude/Global/config/.claude.json` *(gitignored - contains sensitive data)*
+
+**Claude Code:**
+- `~/.claude/CLAUDE.md` → `Anthropic/Claude Code/Global/CLAUDE.md`
+- `~/.claude/settings.local.json` → `Anthropic/Claude Code/Global/config/settings.local.json`
+- `~/.claude/commands/` → `Anthropic/Claude Code/Global/commands/`
+- `~/.claude/.claude.json` → `Anthropic/Claude Code/Global/config/.claude.json` *(gitignored - contains sensitive data)*
+
+**Claude Desktop:**
+- `~/Library/Application Support/Claude/claude_desktop_config.json` → `Anthropic/Claude Desktop/config/claude_desktop_config.json` *(gitignored - contains API keys)*
 
 ### 🛠️ Custom Commands
 
@@ -58,21 +66,32 @@ This repository provides custom [Claude Code slash commands](https://docs.anthro
 ## Setup
 
 1. Clone this repository
-2. Create symbolic links to your global Claude directory:
-   ```bash
-   # Backup existing files
-   mv ~/.claude/CLAUDE.md ~/.claude/CLAUDE.md.backup
-   mv ~/.claude/settings.local.json ~/.claude/settings.local.json.backup
-   mv ~/.claude/.claude.json ~/.claude/.claude.json.backup
-   
-   # Create symbolic links
-   ln -s /path/to/arrgh-hub/Anthropic/Claude/Global/CLAUDE.md ~/.claude/CLAUDE.md
-   ln -s /path/to/arrgh-hub/Anthropic/Claude/Global/config/settings.local.json ~/.claude/settings.local.json
-   ln -s /path/to/arrgh-hub/Anthropic/Claude/Global/commands ~/.claude/commands
-   ln -s /path/to/arrgh-hub/Anthropic/Claude/Global/config/.claude.json ~/.claude/.claude.json
-   ```
+2. Create symbolic links to your global Claude directories:
 
-3. **Security Note**: The `.claude.json` file contains sensitive information (API keys, usage history, personal data) and is intentionally gitignored. While it's part of the symlink workflow for personal backup, it should never be committed to the repository.
+### Claude Code Setup
+```bash
+# Backup existing files
+mv ~/.claude/CLAUDE.md ~/.claude/CLAUDE.md.backup
+mv ~/.claude/settings.local.json ~/.claude/settings.local.json.backup
+mv ~/.claude/.claude.json ~/.claude/.claude.json.backup
+
+# Create symbolic links
+ln -s /path/to/arrgh-hub/Anthropic/Claude Code/Global/CLAUDE.md ~/.claude/CLAUDE.md
+ln -s /path/to/arrgh-hub/Anthropic/Claude Code/Global/config/settings.local.json ~/.claude/settings.local.json
+ln -s /path/to/arrgh-hub/Anthropic/Claude Code/Global/commands ~/.claude/commands
+ln -s /path/to/arrgh-hub/Anthropic/Claude Code/Global/config/.claude.json ~/.claude/.claude.json
+```
+
+### Claude Desktop Setup
+```bash
+# Backup existing configuration
+mv "$HOME/Library/Application Support/Claude/claude_desktop_config.json" "$HOME/Library/Application Support/Claude/claude_desktop_config.json.backup"
+
+# Create symbolic link
+ln -s /path/to/arrgh-hub/Anthropic/Claude Desktop/config/claude_desktop_config.json "$HOME/Library/Application Support/Claude/claude_desktop_config.json"
+```
+
+3. **Security Note**: Both `.claude.json` and `claude_desktop_config.json` contain sensitive information (API keys, auth tokens, personal data) and are intentionally gitignored. While they're part of the symlink workflow for personal backup, they should never be committed to the repository.
 
 ## Related Projects
 
