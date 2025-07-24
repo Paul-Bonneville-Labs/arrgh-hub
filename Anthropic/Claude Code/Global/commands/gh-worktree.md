@@ -22,7 +22,7 @@ Create a new git worktree in a sibling directory with the name derived from: $AR
 
 4. **Create Branch and Worktree**
    - Option A: Use the helper script (recommended for consistency):
-     `~/.claude/commands/scripts/gh-worktree.sh {worktree-name}`
+     `"~/.claude/commands/scripts/gh-worktree.sh" {worktree-name}`
    - Option B: Manual creation:
      - Create a new branch named `feature/{worktree-name}` from current branch
      - Create the git worktree in the target directory using:
