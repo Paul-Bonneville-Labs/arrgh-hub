@@ -5,7 +5,8 @@
       "Bash(gcloud:*)",
       "Bash(brew:*)",
       "Bash(mkdir:docs-ai*)",
-      "Write(docs-ai/*)"
+      "Write(docs-ai/*)",
+      "Bash(~/.claude/commands/scripts/*)"
     ],
     "deny": []
   }

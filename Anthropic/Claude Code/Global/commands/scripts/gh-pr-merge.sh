@@ -48,7 +48,7 @@ echo
 
 # Merge the PR
 echo "🚀 Merging PR #$pr_number..."
-if gh pr merge "$pr_number" --merge --delete-branch; then
+if gh pr merge "$pr_number" --merge --delete-branch --admin; then
     echo "✅ PR #$pr_number merged successfully"
 else
     echo "❌ Error: Failed to merge PR #$pr_number"
