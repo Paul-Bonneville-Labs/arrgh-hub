@@ -64,6 +64,8 @@ Before optimization, verify:
 
 Create an interactive optimization script that:
 
+> **Note:** The following script is pseudocode/template. A complete implementation would require additional error handling, safety checks, and user confirmations before making any changes.
+
 ```bash
 #!/bin/bash
 # GCP Cloud Run Optimizer

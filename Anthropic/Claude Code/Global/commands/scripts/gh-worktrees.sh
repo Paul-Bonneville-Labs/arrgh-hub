@@ -147,6 +147,7 @@ open_worktree() {
     cd "$worktree_path"
     
     # Check if claude is available
+    # Note: This refers to the Claude Code CLI application (https://github.com/anthropics/claude-code)
     if command -v claude &> /dev/null; then
         print_info "Launching Claude Code..."
         exec claude

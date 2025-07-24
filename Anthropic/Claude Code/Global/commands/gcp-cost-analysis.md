@@ -49,6 +49,8 @@ Use Cloud Run pricing model:
 - **Requests**: ~$0.0000004 per request
 - **Always-on CPU allocation** (if minInstances > 0)
 
+> **Note:** Pricing information may change over time. Please verify the current pricing on the [official GCP pricing documentation](https://cloud.google.com/run/pricing).
+
 ### 4. Cost Breakdown Analysis
 Create detailed breakdown showing:
 - **Daily costs per service**
