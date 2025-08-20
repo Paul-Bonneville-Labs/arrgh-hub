@@ -1,0 +1,3 @@
+- The MCP server configurations are in ~/.claude.json, which is a symlink
+- Claude Desktop's configuration file is in ~/Library/Application Support/Claude/claude_desktop_config.json, which includes configured MCP servers
+- Claude Code slash commands are stored in ~/.claude/commands/, which is a symlink

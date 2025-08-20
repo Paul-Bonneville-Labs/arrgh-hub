@@ -58,13 +58,32 @@ fi
 
 echo
 
-# Switch to main
+# Switch to main (handle worktree conflicts)
 echo "🔄 Switching to main branch..."
-git checkout main
 
-# Pull latest changes
-echo "⬇️  Pulling latest changes from main..."
-git pull origin main
+# Check if main is already checked out in another worktree
+main_worktree=$(git worktree list | grep "\[main\]" | head -1 | awk '{print $1}' || echo "")
+
+if [ -n "$main_worktree" ] && [ "$main_worktree" != "$(pwd)" ]; then
+    echo "ℹ️  Main branch is checked out in worktree: $main_worktree"
+    echo "🔄 Navigating to main worktree instead of checking out..."
+    original_dir=$(pwd)
+    cd "$main_worktree"
+    
+    # Pull latest changes in the main worktree
+    echo "⬇️  Pulling latest changes from main..."
+    git pull origin main
+    
+    # Go back to original directory for cleanup
+    cd "$original_dir"
+else
+    # Standard checkout if no worktree conflict
+    git checkout main
+    
+    # Pull latest changes
+    echo "⬇️  Pulling latest changes from main..."
+    git pull origin main
+fi
 
 # Delete local branch (if it still exists)
 echo "🗑️  Cleaning up local branch..."
@@ -78,7 +97,11 @@ fi
 echo
 echo "🎉 Merge workflow completed successfully!"
 echo "   • PR #$pr_number merged and remote branch deleted"
-echo "   • Switched back to main branch"
+if [ -n "$main_worktree" ] && [ "$main_worktree" != "$(pwd)" ]; then
+    echo "   • Updated main branch in worktree: $main_worktree"
+else
+    echo "   • Switched back to main branch"
+fi
 echo "   • Pulled latest changes"
 echo "   • Local branch '$current_branch' cleaned up"
 echo

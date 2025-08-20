@@ -20,6 +20,15 @@
 		},
 		{
 			"path": "../arrgh-collect"
+		},
+		{
+			"path": "../neemee"
+		},
+		{
+			"path": "../neemee-frontend"
+		},
+		{
+			"path": "../neemee-backend"
 		}
 	],
 	"settings": {}
